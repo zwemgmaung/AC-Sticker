@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AC Sticker Final Fix</title>
+    <title>AC Sticker Final Alignment</title>
     <style>
         body { font-family: sans-serif; padding: 15px; background: #f4f7f6; text-align: center; }
         .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .form-group { text-align: left; margin-bottom: 10px; }
-        label { display: block; font-weight: bold; margin-bottom: 3px; font-size: 13px; }
+        .form-group { text-align: left; margin-bottom: 8px; }
+        label { display: block; font-weight: bold; margin-bottom: 2px; font-size: 13px; }
         input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; }
         button { background: #28a745; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 15px; }
         #preview { width: 100%; border-radius: 8px; border: 1px solid #ddd; margin-top: 15px; }
@@ -18,7 +18,7 @@
 <body>
 
 <div class="container">
-    <h2 style="color: #1a73e8; margin-bottom: 20px;">AC Sticker App</h2>
+    <h2 style="color: #1a73e8; margin-bottom: 15px;">AC Sticker App</h2>
     
     <div class="form-group">
         <label>Select Unit Type:</label>
@@ -30,43 +30,10 @@
 
     <div class="form-group"><label>Unit ID:</label><input type="text" id="unitId" value="FCU G-01"></div>
     <div class="form-group"><label>Room:</label><input type="text" id="room" value="M & E Control Room"></div>
-    
-    <div class="form-group">
-        <label>Brand:</label>
-        <select id="brand">
-            <option value="Daikin">Daikin</option>
-            <option value="Summit" selected>Summit</option>
-            <option value="Chigo">Chigo</option>
-            <option value="Hisense">Hisense</option>
-            <option value="Shimazu">Shimazu</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label>Type:</label>
-        <select id="type">
-            <option value="Wall-Mounted" selected>Wall-Mounted</option>
-            <option value="Ceiling Cassette">Ceiling Cassette</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label>Cooling Capacity (HP):</label>
-        <select id="cooling">
-            <option value="1.5">1.5</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label>Refrigerant Type:</label>
-        <select id="refrigerant">
-            <option value="R-22a">R-22a</option>
-            <option value="R-32a" selected>R-32a</option>
-            <option value="R-410a">R-410a</option>
-        </select>
-    </div>
+    <div class="form-group"><label>Brand:</label><select id="brand"><option>Daikin</option><option selected>Summit</option><option>Chigo</option><option>Hisense</option><option>Shimazu</option></select></div>
+    <div class="form-group"><label>Type:</label><select id="type"><option selected>Wall-Mounted</option><option>Ceiling Cassette</option></select></div>
+    <div class="form-group"><label>Cooling Capacity (HP):</label><select id="cooling"><option>1.5</option><option selected>2</option><option>3</option></select></div>
+    <div class="form-group"><label>Refrigerant Type:</label><select id="refrigerant"><option>R-22a</option><option selected>R-32a</option><option>R-410a</option></select></div>
 
     <button onclick="downloadImage()">DOWNLOAD HD STICKER</button>
     <img id="preview" src="" alt="Preview">
@@ -88,7 +55,7 @@
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
             
             ctx.fillStyle = "black";
-            ctx.font = "bold 60px sans-serif"; // ကိုကို့ပုံစံအတိုင်း Font ပိုကြီးပေးထားပါတယ်
+            ctx.font = "bold 55px sans-serif"; // ကိုကို့ပုံနဲ့ အချိုးကျအောင် Font ကို 55px ပြောင်းထားပါတယ်
 
             const unitId = document.getElementById('unitId').value;
             const room = document.getElementById('room').value;
@@ -98,27 +65,25 @@
             const refrigerant = document.getElementById('refrigerant').value;
 
             if (selected === "1000158560.png") {
-                // Outdoor Unit Coordinates
-                const x = 450;
-                ctx.fillText(unitId, x, 105);
-                ctx.fillText(room, x, 175);
-                ctx.fillText(brand, x, 245);
-                ctx.fillText(type, x, 315);
-                ctx.fillText(cooling, x, 385);
-                ctx.fillText(refrigerant, x, 525);
+                const x = 465;
+                ctx.fillText(unitId, x, 128);
+                ctx.fillText(room, x, 203);
+                ctx.fillText(brand, x, 278);
+                ctx.fillText(type, x, 353);
+                ctx.fillText(cooling, x, 428);
+                ctx.fillText(refrigerant, x, 578);
             } else {
-                // Indoor Unit Coordinates (ဒုတိယပုံအတိုင်း အတိအကျချိန်ညှိချက်)
-                const xLeft = 450; // ပထမ ၄ ကြောင်းအတွက်
-                const xRight = 700; // Cooling နဲ့ Refrigerant အတွက် ညာဘက်ကို ကပ်ထုတ်ခြင်း
+                // Indoor Unit (Y-axis များကို ၈ pixel ခန့်စီ ထပ်နှိမ့်ပေးထားပါတယ်)
+                const xLeft = 465;
+                const xRight = 720;
 
-                ctx.fillText(unitId, xLeft, 115);
-                ctx.fillText(room, xLeft, 225);
-                ctx.fillText(brand, xLeft, 335);
-                ctx.fillText(type, xLeft, 445);
+                ctx.fillText(unitId, xLeft, 125);
+                ctx.fillText(room, xLeft, 235);
+                ctx.fillText(brand, xLeft, 345);
+                ctx.fillText(type, xLeft, 455);
                 
-                // ဒုတိယပုံထဲကအတိုင်း ညာဘက်ကို ပိုပို့ထားပါတယ်
-                ctx.fillText(cooling, xRight, 560);
-                ctx.fillText(refrigerant, xRight, 675);
+                ctx.fillText(cooling, xRight, 575);
+                ctx.fillText(refrigerant, xRight, 690);
             }
             previewImg.src = canvas.toDataURL('image/jpeg', 0.8);
         };
