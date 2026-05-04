@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AC Sticker Final Alignment</title>
+    <title>AC Sticker App - Final</title>
     <style>
         body { font-family: sans-serif; padding: 15px; background: #f4f7f6; text-align: center; }
         .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
@@ -23,8 +23,8 @@
     <div class="form-group">
         <label>Select Unit Type:</label>
         <select id="template">
-            <option value="1000158560.png">Outdoor Unit</option>
-            <option value="1000158556.png" selected>Indoor Unit</option>
+            <option value="1000158560.png" selected>Outdoor Unit</option>
+            <option value="1000158556.png">Indoor Unit</option>
         </select>
     </div>
 
@@ -34,6 +34,9 @@
     <div class="form-group"><label>Type:</label><select id="type"><option selected>Wall-Mounted</option><option>Ceiling Cassette</option></select></div>
     <div class="form-group"><label>Cooling Capacity (HP):</label><select id="cooling"><option>1.5</option><option selected>2</option><option>3</option></select></div>
     <div class="form-group"><label>Refrigerant Type:</label><select id="refrigerant"><option>R-22a</option><option selected>R-32a</option><option>R-410a</option></select></div>
+    
+    <div class="form-group"><label>Running Pressure (psi):</label><input type="text" id="pressure" value="150"></div>
+    <div class="form-group"><label>Running Ampere (A):</label><input type="text" id="ampere" value="8.5"></div>
 
     <button onclick="downloadImage()">DOWNLOAD HD STICKER</button>
     <img id="preview" src="" alt="Preview">
@@ -55,34 +58,41 @@
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
             
             ctx.fillStyle = "black";
-            ctx.font = "bold 55px sans-serif"; // ကိုကို့ပုံနဲ့ အချိုးကျအောင် Font ကို 55px ပြောင်းထားပါတယ်
+            ctx.font = "bold 55px sans-serif";
 
             const unitId = document.getElementById('unitId').value;
             const room = document.getElementById('room').value;
             const brand = document.getElementById('brand').value;
             const type = document.getElementById('type').value;
-            const cooling = document.getElementById('cooling').value + " HP";
+            const cooling = document.getElementById('cooling').value;
             const refrigerant = document.getElementById('refrigerant').value;
+            const pressure = document.getElementById('pressure').value;
+            const ampere = document.getElementById('ampere').value;
 
             if (selected === "1000158560.png") {
-                const x = 465;
-                ctx.fillText(unitId, x, 128);
-                ctx.fillText(room, x, 203);
-                ctx.fillText(brand, x, 278);
-                ctx.fillText(type, x, 353);
-                ctx.fillText(cooling, x, 428);
-                ctx.fillText(refrigerant, x, 578);
+                // Outdoor Unit - စာသားတွေကို ညာဘက် Line ပေါ်ရောက်အောင် ချိန်ထားပါတယ်
+                const xL = 470; // ပုံမှန်စာသားများအတွက်
+                const xR = 580; // HP, psi, A ယူနစ်တွေရှေ့မှာ ရိုက်ဖို့အတွက်
+
+                ctx.fillText(unitId, xL, 105);
+                ctx.fillText(room, xL, 168);
+                ctx.fillText(brand, xL, 230);
+                ctx.fillText(type, xL, 292);
+                
+                // ညာဘက်ကို ရွှေ့ပေးရမည့် အပိုင်းများ
+                ctx.fillText(cooling, xR, 355);
+                ctx.fillText(refrigerant, xL + 100, 418);
+                ctx.fillText(pressure, xR + 100, 480);
+                ctx.fillText(ampere, xR + 150, 542);
             } else {
-                // Indoor Unit (Y-axis များကို ၈ pixel ခန့်စီ ထပ်နှိမ့်ပေးထားပါတယ်)
+                // Indoor Unit - ကိုကို အဆင်ပြေနေတဲ့ Code အဟောင်းအတိုင်း လုံးဝမထိဘဲ ထားပေးပါတယ်
                 const xLeft = 465;
                 const xRight = 720;
-
                 ctx.fillText(unitId, xLeft, 125);
                 ctx.fillText(room, xLeft, 235);
                 ctx.fillText(brand, xLeft, 345);
                 ctx.fillText(type, xLeft, 455);
-                
-                ctx.fillText(cooling, xRight, 575);
+                ctx.fillText(cooling + " HP", xRight, 575);
                 ctx.fillText(refrigerant, xRight, 690);
             }
             previewImg.src = canvas.toDataURL('image/jpeg', 0.8);
