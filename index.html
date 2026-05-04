@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AC Sticker - Outdoor Precision Fix</title>
+    <title>AC Sticker - Custom Alignment Fix</title>
     <style>
         body { font-family: sans-serif; padding: 15px; background: #1a1a1a; text-align: center; color: white; }
         .container { max-width: 500px; margin: auto; background: #2d2d2d; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
@@ -65,19 +65,19 @@
             const refrigerant = document.getElementById('refrigerant').value;
 
             if (selected === "1000158560.png") {
-                // Outdoor Unit - ကိုကိုပြောတဲ့အတိုင်း Pixel 60 စီ ထပ်နှိမ့်လိုက်ပါသည်
+                // Outdoor Unit - ကိုကို့ရဲ့ Custom Alignment
                 const xStart = 465; 
                 const xMid = 630;   
 
-                // Y coordinates များကို 60 pixel စီ ထပ်တိုးလိုက်ခြင်း
-                ctx.fillText(unitId, xStart, 178);   // Unit ID line (118 + 60)
-                ctx.fillText(room, xStart, 241);     // Room line (181 + 60)
-                ctx.fillText(brand, xStart, 304);    // Brand line (244 + 60)
-                ctx.fillText(type, xStart, 367);     // Type line (307 + 60)
-                ctx.fillText(cooling, xMid + 50, 430); // HP line (370 + 60)
-                ctx.fillText(refrigerant, xMid + 30, 493); // Gas line (433 + 60)
+                // Y coordinates ပြင်ဆင်ချက်များ
+                ctx.fillText(unitId, xStart, 128);   // Unit ID (50px ပြန်တင်ထားသည်)
+                ctx.fillText(room, xStart, 191);     // Room (50px ပြန်တင်ထားသည်)
+                ctx.fillText(brand, xStart, 264);    // Brand (40px ပြန်တင်ထားသည်)
+                ctx.fillText(type, xStart, 347);     // Type (20px ပြန်တင်ထားသည်)
+                ctx.fillText(cooling, xMid + 50, 430); // အရင်အတိုင်း (ကွက်တိဖြစ်နေသောနေရာ)
+                ctx.fillText(refrigerant, xMid + 30, 493); // အရင်အတိုင်း (ကွက်တိဖြစ်နေသောနေရာ)
             } else {
-                // Indoor Unit - မူရင်းအတိုင်း
+                // Indoor Unit - လုံးဝမထိပါ
                 const xLeft = 465;
                 const xRight = 720;
                 ctx.fillText(unitId, xLeft, 125);
