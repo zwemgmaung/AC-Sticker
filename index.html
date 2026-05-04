@@ -3,28 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AC Sticker App - Final Corrected</title>
+    <title>AC Sticker Final Fix</title>
     <style>
-        body { font-family: sans-serif; padding: 15px; background: #f0f4f8; text-align: center; }
-        .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .form-group { text-align: left; margin-bottom: 8px; }
-        label { display: block; font-weight: bold; margin-bottom: 2px; font-size: 12px; }
-        input, select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; }
-        button { background: #28a745; color: white; border: none; padding: 12px; width: 100%; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        #preview { width: 100%; border-radius: 5px; border: 1px solid #ddd; margin-top: 15px; }
+        body { font-family: sans-serif; padding: 15px; background: #f4f7f6; text-align: center; }
+        .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .form-group { text-align: left; margin-bottom: 10px; }
+        label { display: block; font-weight: bold; margin-bottom: 3px; font-size: 13px; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; }
+        button { background: #28a745; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 15px; }
+        #preview { width: 100%; border-radius: 8px; border: 1px solid #ddd; margin-top: 15px; }
         canvas { display: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2 style="color: #1a73e8; margin: 0 0 15px 0;">AC Sticker App</h2>
+    <h2 style="color: #1a73e8; margin-bottom: 20px;">AC Sticker App</h2>
     
     <div class="form-group">
-        <label>Unit Type:</label>
+        <label>Select Unit Type:</label>
         <select id="template">
-            <option value="1000158560.png">Outdoor Unit (Template 1)</option>
-            <option value="1000158556.png" selected>Indoor Unit (Template 2)</option>
+            <option value="1000158560.png">Outdoor Unit</option>
+            <option value="1000158556.png" selected>Indoor Unit</option>
         </select>
     </div>
 
@@ -53,9 +53,9 @@
     <div class="form-group">
         <label>Cooling Capacity (HP):</label>
         <select id="cooling">
-            <option value="1.5 HP">1.5 HP</option>
-            <option value="2.0 HP" selected>2.0 HP</option>
-            <option value="3.0 HP">3.0 HP</option>
+            <option value="1.5">1.5</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
         </select>
     </div>
 
@@ -72,41 +72,53 @@
     <img id="preview" src="" alt="Preview">
 </div>
 
-<canvas id="mainCanvas" width="1000" height="1350"></canvas>
+<canvas id="mainCanvas" width="1080" height="1350"></canvas>
 
 <script>
     const canvas = document.getElementById('mainCanvas');
     const ctx = canvas.getContext('2d');
     const previewImg = document.getElementById('preview');
-    const templateSelect = document.getElementById('template');
 
     function update() {
         const img = new Image();
-        img.src = templateSelect.value;
+        const selected = document.getElementById('template').value;
+        img.src = selected;
         img.onload = function() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
             
             ctx.fillStyle = "black";
-            ctx.font = "bold 44px sans-serif";
-            const x = 440; // ညာဘက်ခြမ်း စတင်မည့်နေရာ
+            ctx.font = "bold 60px sans-serif"; // ကိုကို့ပုံစံအတိုင်း Font ပိုကြီးပေးထားပါတယ်
 
-            if (templateSelect.value === "1000158560.png") {
-                // Outdoor Unit (Template 1)
-                ctx.fillText(document.getElementById('unitId').value, x, 120);
-                ctx.fillText(document.getElementById('room').value, x, 195);
-                ctx.fillText(document.getElementById('brand').value, x, 270);
-                ctx.fillText(document.getElementById('type').value, x, 345);
-                ctx.fillText(document.getElementById('cooling').value, x, 420);
-                ctx.fillText(document.getElementById('refrigerant').value, x, 570); // Pressure နေရာကျော်ပြီး ညှိထားပါတယ်
+            const unitId = document.getElementById('unitId').value;
+            const room = document.getElementById('room').value;
+            const brand = document.getElementById('brand').value;
+            const type = document.getElementById('type').value;
+            const cooling = document.getElementById('cooling').value + " HP";
+            const refrigerant = document.getElementById('refrigerant').value;
+
+            if (selected === "1000158560.png") {
+                // Outdoor Unit Coordinates
+                const x = 450;
+                ctx.fillText(unitId, x, 105);
+                ctx.fillText(room, x, 175);
+                ctx.fillText(brand, x, 245);
+                ctx.fillText(type, x, 315);
+                ctx.fillText(cooling, x, 385);
+                ctx.fillText(refrigerant, x, 525);
             } else {
-                // Indoor Unit (Template 2) - ကိုကိုပို့တဲ့ Screenshot အရ ပြန်ညှိထားတာ
-                ctx.fillText(document.getElementById('unitId').value, x, 145);
-                ctx.fillText(document.getElementById('room').value, x, 255);
-                ctx.fillText(document.getElementById('brand').value, x, 365);
-                ctx.fillText(document.getElementById('type').value, x, 475);
-                ctx.fillText(document.getElementById('cooling').value, x, 585);
-                ctx.fillText(document.getElementById('refrigerant').value, x, 695);
+                // Indoor Unit Coordinates (ဒုတိယပုံအတိုင်း အတိအကျချိန်ညှိချက်)
+                const xLeft = 450; // ပထမ ၄ ကြောင်းအတွက်
+                const xRight = 700; // Cooling နဲ့ Refrigerant အတွက် ညာဘက်ကို ကပ်ထုတ်ခြင်း
+
+                ctx.fillText(unitId, xLeft, 115);
+                ctx.fillText(room, xLeft, 225);
+                ctx.fillText(brand, xLeft, 335);
+                ctx.fillText(type, xLeft, 445);
+                
+                // ဒုတိယပုံထဲကအတိုင်း ညာဘက်ကို ပိုပို့ထားပါတယ်
+                ctx.fillText(cooling, xRight, 560);
+                ctx.fillText(refrigerant, xRight, 675);
             }
             previewImg.src = canvas.toDataURL('image/jpeg', 0.8);
         };
