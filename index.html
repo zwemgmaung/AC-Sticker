@@ -5,55 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AC Sticker Generator - HD</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; background: #eef2f3; text-align: center; color: #333; }
+        body { font-family: 'Segoe UI', sans-serif; padding: 20px; background: #eef2f3; text-align: center; }
         .container { max-width: 600px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        h2 { color: #2c3e50; margin-bottom: 20px; }
-        .form-group { text-align: left; margin-bottom: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; }
-        input, select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
-        button { background: #007bff; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
-        button:hover { background: #0056b3; }
+        .form-group { text-align: left; margin-bottom: 12px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; color: #555; }
+        input, select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 16px; background: #fff; }
+        button { background: #28a745; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 15px; }
         #preview-container { margin-top: 20px; border-top: 2px solid #eee; padding-top: 20px; }
-        #preview { width: 100%; border-radius: 8px; border: 1px solid #ddd; display: block; }
-        canvas { display: none; } /* Background processing */
+        #preview { width: 100%; border-radius: 8px; border: 1px solid #ddd; }
+        canvas { display: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>AC Sticker Generator</h2>
+    <h2 style="color: #2c3e50;">AC Sticker App</h2>
     
     <div class="form-group">
-        <label>Select Template:</label>
+        <label>Unit Type (Template):</label>
         <select id="template">
-            <option value="1000158560.png">Template 1 (Blue Header)</option>
-            <option value="1000158556.png">Template 2 (Plain White)</option>
+            <option value="1000158560.png">Outdoor Unit (Template 1)</option>
+            <option value="1000158556.png">Indoor Unit (Template 2)</option>
         </select>
     </div>
 
     <div class="form-group">
         <label>Unit ID:</label>
-        <input type="text" id="unitId" placeholder="e.g. AC-001">
+        <input type="text" id="unitId" placeholder="Enter Unit ID">
     </div>
 
     <div class="form-group">
         <label>Room:</label>
-        <input type="text" id="room" placeholder="e.g. Office Room (1)">
+        <input type="text" id="room" placeholder="Enter Room Name">
     </div>
 
     <div class="form-group">
         <label>Brand:</label>
-        <input type="text" id="brand" placeholder="e.g. Daikin / Samsung">
+        <select id="brand">
+            <option value="Daikin">Daikin</option>
+            <option value="Summit">Summit</option>
+            <option value="Chigo">Chigo</option>
+            <option value="Hisense">Hisense</option>
+            <option value="Shimazu">Shimazu</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Type:</label>
+        <select id="type">
+            <option value="Wall-Mounted">Wall-Mounted</option>
+            <option value="Ceiling Cassette">Ceiling Cassette</option>
+        </select>
     </div>
 
     <div class="form-group">
         <label>Cooling Capacity (HP):</label>
-        <input type="text" id="cooling" placeholder="e.g. 1.5 HP / 2.0 HP">
+        <select id="cooling">
+            <option value="1.5 HP">1.5 HP</option>
+            <option value="2.0 HP">2.0 HP</option>
+            <option value="3.0 HP">3.0 HP</option>
+        </select>
     </div>
 
     <div class="form-group">
-        <label>Refrigerant:</label>
-        <input type="text" id="refrigerant" placeholder="e.g. R32 / R410A">
+        <label>Refrigerant Type:</label>
+        <select id="refrigerant">
+            <option value="R-22a">R-22a</option>
+            <option value="R-32a">R-32a</option>
+            <option value="R-410a">R-410a</option>
+        </select>
     </div>
 
     <button onclick="downloadImage()">Download Full HD JPEG</button>
@@ -70,59 +90,55 @@
     const canvas = document.getElementById('mainCanvas');
     const ctx = canvas.getContext('2d');
     const previewImg = document.getElementById('preview');
-    const templateSelect = document.getElementById('template');
 
-    // စာသားတွေ ပုံပေါ်ဆွဲမည့် Function
     function updateSticker() {
         const img = new Image();
-        img.src = templateSelect.value;
+        const selectedTemplate = document.getElementById('template').value;
+        img.src = selectedTemplate;
         
         img.onload = function() {
-            // Canvas ကို Template ပုံရဲ့ Resolution အတိုင်း အသေထားမယ်
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
             
+            // Font Setting (Bold & Large)
             ctx.fillStyle = "black";
-            ctx.font = "bold 36px Arial";
+            ctx.font = "bold 42px Arial";
 
-            // စာသားနေရာ Coordinates များကို Template အလိုက်ချိန်ညှိခြင်း
-            let x = 450; // စာသားစတင်မည့် X နေရာ
-            let y = 145; // စာသားစတင်မည့် Y နေရာ
-            let gap = 72; // စာတစ်ကြောင်းစီကြား အကွာအဝေး
+            let x = 450; 
+            let y = 145; 
+            let gap = 74; 
 
-            if (templateSelect.value === "1000158556.png") {
-                // Template 2 အတွက် နေရာ နည်းနည်း ပြန်ချိန်ခြင်း
-                x = 440;
-                y = 135;
-                gap = 70;
+            // Indoor Unit (Template 2) အတွက် နေရာပြန်ညှိခြင်း
+            if (selectedTemplate === "1000158556.png") {
+                x = 445;
+                y = 140;
+                gap = 72;
             }
 
+            // Data Mapping
             ctx.fillText(document.getElementById('unitId').value, x, y);
             ctx.fillText(document.getElementById('room').value, x, y + gap);
             ctx.fillText(document.getElementById('brand').value, x, y + (gap * 2));
-            ctx.fillText(document.getElementById('cooling').value, x, y + (gap * 4)); // နေရာလွတ်ကျော်ရန် gap x 4
+            ctx.fillText(document.getElementById('type').value, x, y + (gap * 3));
+            ctx.fillText(document.getElementById('cooling').value, x, y + (gap * 4));
             ctx.fillText(document.getElementById('refrigerant').value, x, y + (gap * 5));
 
-            // Preview ပြရန် (Quality လျှော့ပြထားမယ်)
-            previewImg.src = canvas.toDataURL('image/jpeg', 0.7);
+            previewImg.src = canvas.toDataURL('image/jpeg', 0.8);
         };
     }
 
-    // Input တစ်ခုခု ရိုက်လိုက်တိုင်း Preview ကို update လုပ်မယ်
-    document.querySelectorAll('input, select').forEach(element => {
-        element.addEventListener('input', updateSticker);
+    document.querySelectorAll('input, select').forEach(el => {
+        el.addEventListener('input', updateSticker);
     });
 
-    // HD Quality နဲ့ Download ဆွဲမည့် Function
     function downloadImage() {
         const link = document.createElement('a');
-        const name = document.getElementById('unitId').value || 'ac_sticker';
+        const name = document.getElementById('unitId').value || 'AC_Sticker';
         link.download = name + '.jpg';
-        link.href = canvas.toDataURL('image/jpeg', 1.0); // 1.0 is Full HD Quality
+        link.href = canvas.toDataURL('image/jpeg', 1.0);
         link.click();
     }
 
-    // စဖွင့်ချင်းမှာ ပုံလေး ပေါ်နေအောင်
     window.onload = updateSticker;
 </script>
 
