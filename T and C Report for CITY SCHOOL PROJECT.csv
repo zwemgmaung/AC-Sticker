@@ -1,0 +1,210 @@
+S/N,Indoor Unit ID,Outdoor Unit ID,Room,Brand,Type,Cooling Capacity ,Refrigerant Type 
+GROUND FLOOR,,,,,,,
+1,FCU-G-01,CU-G-01,M&E Control Room,SUMMIT,Wall-Mounted,2,R-32a
+2,FCU-G-02,​CU-G-02,Playground,DAIKIN,Ceiling Cassette,3,R-22a
+3,FCU-G-03,CU-G-03,Playground,DAIKIN,Ceiling Cassette,3,R-22a
+4,FCU-G-04,CU-G-04,Playground,DAIKIN,Ceiling Cassette,3,R-22a
+5,FCU-G-05,CU-G-05,Walkway,CHIGO,Ceiling Cassette,2,R-22a
+6,FCU-G-06,CU-G-06,Playground,DAIKIN,Ceiling Cassette,2,R-22a
+7,FCU-G-07,CU-G-07,Playground,DAIKIN,Ceiling Cassette,3,R-22a
+8,FCU-G-08,CU-G-08,Classroom-3,SUMMIT,Wall-Mounted,2,R-32a
+9,FCU-G-09,CU-G-09,Classroom-3,SUMMIT,Wall-Mounted,2,R-32a
+10,FCU-G-10,CU-G-10,Classroom-3,SUMMIT,Wall-Mounted,2,R-32a
+11,FCU-G-11,CU-G-11,Walkway,CHIGO,Ceiling Cassette,2,R-22a
+12,FCU-G-12,CU-G-12,Classroom-2,SUMMIT,Wall-Mounted,2,R-32a
+13,FCU-G-13,CU-G-13,Classroom-2,SUMMIT,Wall-Mounted,2,R-32a
+14,FCU-G-14,CU-G-14,Classroom-2,SUMMIT,Wall-Mounted,2,R-32a
+15,FCU-G-15,CU-G-15,Classroom-1,SUMMIT,Wall-Mounted,2,R-32a
+16,FCU-G-16,CU-G-16,Classroom-1,SUMMIT,Wall-Mounted,2,R-32a
+17,FCU-G-17,CU-G-17,Classroom-1,SUMMIT,Wall-Mounted,2,R-32a
+18,FCU-G-18,CU-G-18,Merchandising,HISENSE,Ceiling Cassette,3,R-22a
+19,FCU-G-19,CU-G-19,Merchandising,HISENSE,Ceiling Cassette,3,R-22a
+20,FCU-G-20,CU-G-20,Merchandising,HISENSE,Ceiling Cassette,3,R-22a
+21,FCU-G-21,CU-G-21,Merchandising,HISENSE,Ceiling Cassette,3,R-22a
+22,FCU-G-22,CU-G-22,Office,SUMMIT,Wall-Mounted,2,R-32a
+23,FCU-G-23,CU-G-23,Finance,DAIKIN,Wall-Mounted,1.5,R-410a
+24,FCU-G-24,CU-G-24,Reception Room,SUMMIT,Wall-Mounted,2,R-32a
+25,FCU-G-25,CU-G-25,Reception Room,SUMMIT,Wall-Mounted,2,R-32a
+26,FCU-G-26,CU-G-26,Nursery Room,SUMMIT,Wall-Mounted,2,R-32a
+27,FCU-G-27,CU-G-27,Nursery Room,SUMMIT,Wall-Mounted,2,R-32a
+28,FCU-G-28,CU-G-28,Reading Room,SUMMIT,Wall-Mounted,2,R-32a
+29,FCU-G-29,CU-G-29,Reading Room,SUMMIT,Wall-Mounted,2,R-32a
+30,FCU-G-30,CU-G-30,Waiting Lounge,DAIKIN,Ceiling Cassette,3,R-22a
+31,FCU-G-31,CU-G-31,Waiting Lounge,DAIKIN,Ceiling Cassette,3,R-22a
+32,FCU-G-32,CU-G-32,Waiting Lounge,DAIKIN,Ceiling Cassette,3,R-22a
+33,FCU-G-33,CU-G-33,Waiting Lounge,DAIKIN,Ceiling Cassette,3,R-22a
+FIRST FLOOR,,,,,,,
+34,FCU-1-01,​CU-1-01,ICT Room,DAIKIN,Ceiling Cassette,2,R-22a
+35,FCU-1-02,CU-1-02,HST Room,DAIKIN,Ceiling Cassette,2,R-22a
+36,FCU-1-03,CU-1-03,Walkway,DAIKIN,Ceiling Cassette,2,R-22a
+37,FCU-1-04,CU-1-04,Lab Room,DAIKIN,Ceiling Cassette,3,R-22a
+38,FCU-1-05,CU-1-05,Lab Room,DAIKIN,Ceiling Cassette,3,R-22a
+39,FCU-1-06,CU-1-06,Lab Room,DAIKIN,Ceiling Cassette,3,R-22a
+40,FCU-1-07,CU-1-07,Lab Room,DAIKIN,Ceiling Cassette,3,R-22a
+41,FCU-1-08,CU-1-08,Art Room,DAIKIN,Ceiling Cassette,3,R-22a
+42,FCU-1-09,CU-1-09,Art Room,DAIKIN,Ceiling Cassette,3,R-22a
+43,FCU-1-10,CU-1-10,Art Room,DAIKIN,Ceiling Cassette,3,R-22a
+44,FCU-1-11,CU-1-11,Music Room,DAIKIN,Ceiling Cassette,3,R-22a
+45,FCU-1-12,CU-1-12,Music Room,DAIKIN,Ceiling Cassette,3,R-22a
+46,FCU-1-13,CU-1-13,Music Room,DAIKIN,Ceiling Cassette,3,R-22a
+47,FCU-1-14,CU-1-14,Walkway,DAIKIN,Ceiling Cassette,2,R-22a
+48,FCU-1-15,CU-1-15,Year 2C,SUMMIT,Wall-Mounted,1.5,R-32a
+49,FCU-1-16,CU-1-16,Year 2C,SUMMIT,Wall-Mounted,1.5,R-32a
+50,FCU-1-17,CU-1-17,Year 2C,SUMMIT,Wall-Mounted,1.5,R-32a
+51,FCU-1-18,CU-1-18,Year 2B,SUMMIT,Wall-Mounted,1.5,R-32a
+52,FCU-1-19,CU-1-19,Year 2B,SUMMIT,Wall-Mounted,1.5,R-32a
+53,FCU-1-20,CU-1-20,Year 2B,SUMMIT,Wall-Mounted,1.5,R-32a
+54,FCU-1-21,CU-1-21,Year 2A,SUMMIT,Wall-Mounted,1.5,R-32a
+55,FCU-1-22,CU-1-22,Year 2A,SUMMIT,Wall-Mounted,1.5,R-32a
+56,FCU-1-23,CU-1-23,Year 2A,SUMMIT,Wall-Mounted,1.5,R-32a
+57,FCU-1-24,CU-1-24,Year 1A,SUMMIT,Wall-Mounted,1.5,R-32a
+58,FCU-1-25,CU-1-25,Year 1A,SUMMIT,Wall-Mounted,1.5,R-32a
+59,FCU-1-26,CU-1-26,Year 1A,SUMMIT,Wall-Mounted,1.5,R-32a
+60,FCU-1-27,CU-1-27,Year 1B,SUMMIT,Wall-Mounted,1.5,R-32a
+61,FCU-1-28,CU-1-28,Year 1B,SUMMIT,Wall-Mounted,1.5,R-32a
+62,FCU-1-29,CU-1-29,Year 1B,SUMMIT,Wall-Mounted,1.5,R-32a
+63,FCU-1-30,CU-1-30,Teacher Office,DAIKIN,Ceiling Cassette,2,R-22a
+64,FCU-1-31,CU-1-31,M&E Room,DAIKIN,Ceiling Cassette,2,R-22a
+65,FCU-1-32,CU-1-32,Clinic,DAIKIN,Wall-Mounted,1.5,R-410a
+66,FCU-1-33,CU-1-33,Clinic,DAIKIN,Wall-Mounted,1.5,R-410a
+67,FCU-1-34,CU-1-34,Office,DAIKIN,Wall-Mounted,1.5,R-410a
+68,FCU-1-35,CU-1-35,Office,DAIKIN,Wall-Mounted,1.5,R-410a
+69,FCU-1-36,CU-1-36,Principal Office,HISENSE,Ceiling Cassette,3,R-22a
+SECOND FLOOR,,,,,,,
+70,FCU-2-01,​CU-2-01,Year 6B,SUMMIT,Wall-Mounted,2,R-32a
+71,FCU-2-02,CU-2-02,Year 6B,SUMMIT,Wall-Mounted,2,R-32a
+72,FCU-2-03,CU-2-03,Year 6B,SUMMIT,Wall-Mounted,2,R-32a
+73,FCU-2-04,CU-2-04,Year 6B,SUMMIT,Wall-Mounted,2,R-32a
+74,FCU-2-05,CU-2-05,Year 6A,SUMMIT,Wall-Mounted,2,R-32a
+75,FCU-2-06,CU-2-06,Year 6A,SUMMIT,Wall-Mounted,2,R-32a
+76,FCU-2-07,CU-2-07,Year 6A,SUMMIT,Wall-Mounted,2,R-32a
+77,FCU-2-08,CU-2-08,Year 6A,SUMMIT,Wall-Mounted,2,R-32a
+78,FCU-2-09,CU-2-09,Year 5B,SUMMIT,Wall-Mounted,2,R-32a
+79,FCU-2-10,CU-2-10,Year 5B,SUMMIT,Wall-Mounted,2,R-32a
+80,FCU-2-11,CU-2-11,Walkway,DAIKIN,Ceiling Cassette,2,R-22a
+81,FCU-2-12,CU-2-12,Year 5B,SUMMIT,Wall-Mounted,2,R-32a
+82,FCU-2-13,CU-2-13,Year 5B,SUMMIT,Wall-Mounted,2,R-32a
+83,FCU-2-14,CU-2-14,Year 5A,SUMMIT,Wall-Mounted,2,R-32a
+84,FCU-2-15,CU-2-15,Year 5A,SUMMIT,Wall-Mounted,2,R-32a
+85,FCU-2-16,CU-2-16,Year 5A,SUMMIT,Wall-Mounted,2,R-32a
+86,FCU-2-17,CU-2-17,Walkway,DAIKIN,Ceiling Cassette,2,R-22a
+87,FCU-2-18,CU-2-18,Year 5A,SUMMIT,Wall-Mounted,2,R-32a
+88,FCU-2-19,CU-2-19,Year 4C,DAIKIN,Wall-Mounted,1.5,R-410a
+89,FCU-2-20,CU-2-20,Year 4C,DAIKIN,Wall-Mounted,1.5,R-410a
+90,FCU-2-21,CU-2-21,Year 4C,DAIKIN,Wall-Mounted,1.5,R-410a
+91,FCU-2-22,CU-2-22,Year 4B,DAIKIN,Wall-Mounted,1.5,R-410a
+92,FCU-2-23,CU-2-23,Year 4B,DAIKIN,Wall-Mounted,1.5,R-410a
+93,FCU-2-24,CU-2-24,Year 4B,DAIKIN,Wall-Mounted,1.5,R-410a
+94,FCU-2-25,CU-2-25,Year 4A,DAIKIN,Wall-Mounted,1.5,R-410a
+95,FCU-2-26,CU-2-26,Year 4A,DAIKIN,Wall-Mounted,1.5,R-410a
+96,FCU-2-27,CU-2-27,Year 4B,DAIKIN,Wall-Mounted,1.5,R-410a
+97,FCU-2-28,CU-2-28,Year 3A,DAIKIN,Wall-Mounted,1.5,R-410a
+98,FCU-2-29,CU-2-29,Year 3A,DAIKIN,Wall-Mounted,1.5,R-410a
+99,FCU-2-30,CU-2-30,Year 3A,DAIKIN,Wall-Mounted,1.5,R-410a
+100,FCU-2-31,CU-2-31,Year 3B,DAIKIN,Wall-Mounted,1.5,R-410a
+101,FCU-2-32,CU-2-32,Year 3B,DAIKIN,Wall-Mounted,1.5,R-410a
+102,FCU-2-33,CU-2-33,Year 3B,DAIKIN,Wall-Mounted,1.5,R-410a
+103,FCU-2-34,CU-2-34,Year 3C,DAIKIN,Wall-Mounted,1.5,R-410a
+104,FCU-2-35,CU-2-35,Year 3C,DAIKIN,Wall-Mounted,1.5,R-410a
+105,FCU-2-36,CU-2-36,Year 3C,DAIKIN,Wall-Mounted,1.5,R-410a
+106,FCU-2-37,CU-2-37,Year 4D,SUMMIT,Wall-Mounted,2,R-32a
+107,FCU-2-38,CU-2-38,Walkway,DAIKIN,Ceiling Cassette,2,R-22a
+108,FCU-2-39,CU-2-39,Year 4D,SUMMIT,Wall-Mounted,2,R-32a
+109,FCU-2-40,CU-2-40,Year 4D,SUMMIT,Wall-Mounted,2,R-32a
+110,FCU-2-41,CU-2-41,Year 4E,SUMMIT,Wall-Mounted,2,R-32a
+111,FCU-2-42,CU-2-42,Year 4E,SUMMIT,Wall-Mounted,2,R-32a
+112,FCU-2-43,CU-2-43,Year 4E,SUMMIT,Wall-Mounted,2,R-32a
+THIRD FLOOR,,,,,,,
+113,FCU-3-01,​CU-3-01,A Level Room,DAIKIN,Ceiling Cassette,3,R-22a
+114,FCU-3-02,CU-3-02,A Level Room,DAIKIN,Ceiling Cassette,3,R-22a
+115,FCU-3-03,CU-3-03,A Level Room,DAIKIN,Ceiling Cassette,3,R-22a
+116,FCU-3-04,CU-3-04,A Level Room,DAIKIN,Ceiling Cassette,3,R-22a
+117,FCU-3-05,CU-3-05,A Level Room,DAIKIN,Ceiling Cassette,3,R-22a
+118,FCU-3-06,CU-3-06,A Level Room,DAIKIN,Ceiling Cassette,3,R-22a
+119,FCU-3-07,CU-3-07,AIS Room,SUMMIT,Wall-Mounted,2,R-32a
+120,FCU-3-08,CU-3-08,AIS Room,SUMMIT,Wall-Mounted,2,R-32a
+121,FCU-3-09,CU-3-09,AIS Room,SUMMIT,Wall-Mounted,2,R-32a
+122,FCU-3-10,CU-3-10,Walkway,DAIKIN,Ceiling Cassette,2,R-22a
+123,FCU-3-11,CU-3-11,AIS Room,SUMMIT,Wall-Mounted,2,R-32a
+124,FCU-3-12,CU-3-12,Year 7C,SUMMIT,Wall-Mounted,2,R-32a
+125,FCU-3-13,CU-3-13,Year 7C,SUMMIT,Wall-Mounted,2,R-32a
+126,FCU-3-14,CU-3-14,Year 7C,SUMMIT,Wall-Mounted,2,R-32a
+127,FCU-3-15,CU-3-15,Year 7C,SUMMIT,Wall-Mounted,2,R-32a
+128,FCU-3-16,CU-3-16,Walkway,DAIKIN,Ceiling Cassette,2,R-22a
+129,FCU-3-17,CU-3-17,Year 8C,DAIKIN,Wall-Mounted,1.5,R-410a
+130,FCU-3-18,CU-3-18,Year 8C,DAIKIN,Wall-Mounted,1.5,R-410a
+131,FCU-3-19,CU-3-19,Year 8C,DAIKIN,Wall-Mounted,1.5,R-410a
+132,FCU-3-20,CU-3-20,Year 8B,DAIKIN,Wall-Mounted,1.5,R-410a
+133,FCU-3-21,CU-3-21,Year 8B,DAIKIN,Wall-Mounted,1.5,R-410a
+134,FCU-3-22,CU-3-22,Year 8B,DAIKIN,Wall-Mounted,1.5,R-410a
+135,FCU-3-23,CU-3-23,Year 8A,DAIKIN,Wall-Mounted,1.5,R-410a
+136,FCU-3-24,CU-3-24,Year 8A,DAIKIN,Wall-Mounted,1.5,R-410a
+137,FCU-3-25,CU-3-25,Year 8A,DAIKIN,Wall-Mounted,1.5,R-410a
+138,FCU-3-26,CU-3-26,Year 9A,DAIKIN,Wall-Mounted,1.5,R-410a
+139,FCU-3-27,CU-3-27,Year 9A,DAIKIN,Wall-Mounted,1.5,R-410a
+140,FCU-3-28,CU-3-28,Year 9A,DAIKIN,Wall-Mounted,1.5,R-410a
+141,FCU-3-29,CU-3-29,Year 9B,DAIKIN,Wall-Mounted,1.5,R-410a
+142,FCU-3-30,CU-3-30,Year 9B,DAIKIN,Wall-Mounted,1.5,R-410a
+143,FCU-3-31,CU-3-31,Year 9B,DAIKIN,Wall-Mounted,1.5,R-410a
+144,FCU-3-32,CU-3-32,Extra,DAIKIN,Wall-Mounted,1.5,R-410a
+145,FCU-3-33,CU-3-33,Extra,DAIKIN,Wall-Mounted,1.5,R-410a
+146,FCU-3-34,CU-3-34,Year 7A,SUMMIT,Wall-Mounted,2,R-32a
+147,FCU-3-35,CU-3-35,Walkway,DAIKIN,Ceiling Cassette,2,R-22a
+148,FCU-3-36,CU-3-36,Year 7A,SUMMIT,Wall-Mounted,2,R-32a
+149,FCU-3-37,CU-3-37,Year 7A,SUMMIT,Wall-Mounted,2,R-32a
+150,FCU-3-38,CU-3-38,Year 7B,SUMMIT,Wall-Mounted,2,R-32a
+151,FCU-3-39,CU-3-39,Year 7B,SUMMIT,Wall-Mounted,2,R-32a
+152,FCU-3-40,CU-3-40,Year 7B,SUMMIT,Wall-Mounted,2,R-32a
+FOURTH FLOOR,,,,,,,
+153,FCU-4-01,CU-4-01,Hall,DAIKIN,Ceiling Cassette,3,R-22a
+154,FCU-4-02,CU-4-02,Hall,DAIKIN,Ceiling Cassette,3,R-22a
+155,FCU-4-03,CU-4-03,Hall,DAIKIN,Ceiling Cassette,3,R-22a
+156,FCU-4-04,CU-4-04,Hall,DAIKIN,Ceiling Cassette,3,R-22a
+157,FCU-4-05,CU-4-05,Hall,DAIKIN,Ceiling Cassette,3,R-22a
+158,FCU-4-06,CU-4-06,Hall,SHIMAZU,Ceiling Cassette,3,R-410a
+159,FCU-4-07,CU-4-07,Hall,SHIMAZU,Ceiling Cassette,3,R-410a
+160,FCU-4-08,CU-4-08,Hall,SHIMAZU,Ceiling Cassette,3,R-410a
+161,FCU-4-09,CU-4-09,Hall,DAIKIN,Ceiling Cassette,3,R-22a
+162,FCU-4-10,CU-4-10,Hall,DAIKIN,Ceiling Cassette,3,R-22a
+163,FCU-4-11,CU-4-11,Hall,SHIMAZU,Ceiling Cassette,3,R-410a
+164,FCU-4-12,CU-4-12,Hall,SHIMAZU,Ceiling Cassette,3,R-410a
+165,FCU-4-13,CU-4-13,Year 11D,SUMMIT,Wall-Mounted,1.5,R-32a
+166,FCU-4-14,CU-4-14,Year 11D,SUMMIT,Wall-Mounted,1.5,R-32a
+167,FCU-4-15,CU-4-15,Year 11D,SUMMIT,Wall-Mounted,1.5,R-32a
+168,FCU-4-16,CU-4-16,Year 11B,SUMMIT,Wall-Mounted,1.5,R-32a
+169,FCU-4-17,CU-4-17,Year 11B,SUMMIT,Wall-Mounted,1.5,R-32a
+170,FCU-4-18,CU-4-18,Year 11B,SUMMIT,Wall-Mounted,1.5,R-32a
+171,FCU-4-19,CU-4-19,Year 11A,SUMMIT,Wall-Mounted,1.5,R-32a
+172,FCU-4-20,CU-4-20,Year 11A,SUMMIT,Wall-Mounted,1.5,R-32a
+173,FCU-4-21,CU-4-21,Year 11A,SUMMIT,Wall-Mounted,1.5,R-32a
+174,FCU-4-22,CU-4-22,Year 10A,DAIKIN,Wall-Mounted,1.5,R-410a
+175,FCU-4-23,CU-4-23,Year 10A,DAIKIN,Wall-Mounted,1.5,R-410a
+176,FCU-4-24,CU-4-24,Year 10A,DAIKIN,Wall-Mounted,1.5,R-32a
+177,FCU-4-25,CU-4-25,Year 10B,DAIKIN,Wall-Mounted,1.5,R-410a
+178,FCU-4-26,CU-4-26,Year 10B,SUMMIT,Wall-Mounted,1.5,R-32a
+179,FCU-4-27,CU-4-27,Year 10B,DAIKIN,Wall-Mounted,1.5,R-410a
+180,FCU-4-28,CU-4-28,Extra,DAIKIN,Wall-Mounted,1.5,R-410a
+181,FCU-4-29,CU-4-29,Extra,DAIKIN,Wall-Mounted,1.5,R-410a
+182,FCU-4-30,CU-4-30,Year 11C,SUMMIT,Wall-Mounted,2,R-32a
+183,FCU-4-31,CU-4-31,Year 11C,SUMMIT,Wall-Mounted,2,R-32a
+184,FCU-4-32,CU-4-32,Year 11C,SUMMIT,Wall-Mounted,2,R-32a
+185,FCU-4-33,CU-4-33,Year 11E,SUMMIT,Wall-Mounted,2,R-32a
+186,FCU-4-34,CU-4-34,Year 11E,SUMMIT,Wall-Mounted,2,R-32a
+187,FCU-4-35,CU-4-35,Year 11E,SUMMIT,Wall-Mounted,2,R-32a
+PENTHOUSE,,,,,,,
+188,FCU-5-01,​CU-5-01,STUDY AREA,SHIMAZU,Ceiling Cassette,3,R-410a
+189,FCU-5-02,CU-5-02,STUDY AREA,SHIMAZU,Ceiling Cassette,3,R-410a
+190,FCU-5-03,CU-5-03,STUDY AREA,SHIMAZU,Ceiling Cassette,3,R-410a
+191,FCU-5-04,CU-5-04,STUDY AREA,SHIMAZU,Ceiling Cassette,3,R-410a
+192,FCU-5-05,CU-5-05,STUDY AREA,SHIMAZU,Ceiling Cassette,3,R-410a
+193,FCU-5-06,CU-5-06,STUDY AREA,SHIMAZU,Ceiling Cassette,3,R-410a
+194,FCU-5-07,CU-5-07,STUDY AREA,SHIMAZU,Ceiling Cassette,3,R-410a
+195,FCU-5-08,CU-5-08,STUDY AREA,SHIMAZU,Ceiling Cassette,3,R-410a
+196,FCU-5-09,CU-5-09,STUDY AREA,SHIMAZU,Ceiling Cassette,3,R-410a
+197,FCU-5-10,CU-5-10,STUDY AREA,SHIMAZU,Ceiling Cassette,3,R-410a
+198,FCU-5-11,CU-5-11,STUDY AREA,SHIMAZU,Ceiling Cassette,3,R-410a
+199,FCU-5-12,CU-5-12,PRIVATE STUDY AREA,DAIKIN,Ceiling Cassette,2,R-22a
+200,FCU-5-13,CU-5-13,PRIVATE STUDY AREA,DAIKIN,Ceiling Cassette,2,R-22a
+201,FCU-5-14,CU-5-14,PRIVATE STUDY AREA,DAIKIN,Ceiling Cassette,2,R-22a
+202,FCU-5-15,CU-5-15,PRIVATE STUDY AREA,DAIKIN,Ceiling Cassette,2,R-22a
+203,FCU-5-16,CU-5-16,PRIVATE STUDY AREA,DAIKIN,Ceiling Cassette,2,R-22a
