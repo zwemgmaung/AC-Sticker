@@ -3,34 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AC Sticker Generator - Professional</title>
+    <title>AC Sticker App - Professional</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; padding: 15px; background: #f4f7f6; text-align: center; }
-        .container { max-width: 550px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; padding: 15px; background: #f0f4f8; text-align: center; color: #333; }
+        .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        h2 { color: #1a73e8; margin-top: 0; }
         .form-group { text-align: left; margin-bottom: 10px; }
-        label { display: block; font-weight: bold; margin-bottom: 3px; font-size: 13px; color: #333; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #bbb; border-radius: 6px; box-sizing: border-box; font-size: 15px; }
-        button { background: #1a73e8; color: white; border: none; padding: 15px; width: 100%; border-radius: 6px; font-size: 17px; font-weight: bold; cursor: pointer; margin-top: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 3px; font-size: 13px; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 15px; }
+        button { background: #28a745; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-size: 17px; font-weight: bold; cursor: pointer; margin-top: 15px; }
+        button:hover { background: #218838; }
         #preview-container { margin-top: 20px; border-top: 2px solid #eee; padding-top: 15px; }
-        #preview { width: 100%; border-radius: 5px; border: 1px solid #ddd; }
-        canvas { display: none; }
+        #preview { width: 100%; border-radius: 8px; border: 1px solid #ddd; display: block; }
+        canvas { display: none; } /* Hidden canvas for HD processing */
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2 style="margin-top:0; color: #1a73e8;">AC Sticker App</h2>
+    <h2>AC Sticker App</h2>
     
     <div class="form-group">
-        <label>Select Unit Type:</label>
+        <label>Unit Type:</label>
         <select id="template">
-            <option value="1000158560.png">Outdoor Unit (Template 1)</option>
-            <option value="1000158556.png">Indoor Unit (Template 2)</option>
+            <option value="1000158560.png">Outdoor Unit (Blue Header)</option>
+            <option value="1000158556.png">Indoor Unit (Plain White)</option>
         </select>
     </div>
 
-    <div class="form-group"><label>Unit ID:</label><input type="text" id="unitId" placeholder="ID"></div>
-    <div class="form-group"><label>Room:</label><input type="text" id="room" placeholder="Room Name"></div>
+    <div class="form-group"><label>Unit ID:</label><input type="text" id="unitId" placeholder="e.g. FCU G-01"></div>
+    <div class="form-group"><label>Room:</label><input type="text" id="room" placeholder="e.g. Office Room"></div>
     
     <div class="form-group">
         <label>Brand:</label>
@@ -72,7 +74,7 @@
     <button onclick="downloadImage()">DOWNLOAD HD STICKER</button>
     
     <div id="preview-container">
-        <p style="font-weight: bold; margin-bottom:5px;">Live Preview</p>
+        <p style="font-weight: bold; margin-bottom: 5px;">Live Preview</p>
         <img id="preview" src="" alt="Sticker Preview">
     </div>
 </div>
@@ -90,53 +92,66 @@
         img.src = templateSelect.value;
         
         img.onload = function() {
+            // Draw original template first
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
             
-            ctx.fillStyle = "black";
-            ctx.font = "bold 44px Arial"; // ပိုကြီးပြီး Bold ဖြစ်အောင်
+            // Text Settings (Matching the provided example)
+            ctx.fillStyle = "#111"; // Slightly off-black for natural look
+            ctx.font = "bold 46px sans-serif"; // Large, Bold, sans-serif
 
+            // Get Input Values
             const unitId = document.getElementById('unitId').value;
             const room = document.getElementById('room').value;
             const brand = document.getElementById('brand').value;
             const type = document.getElementById('type').value;
-            const cooling = document.getElementById('cooling').value;
+            const cooling = document.getElementById('cooling').value + " HP";
             const refrigerant = document.getElementById('refrigerant').value;
 
+            // X coordinate for right side of colon (around 460px on a 1080px canvas)
+            const textX = 460;
+
+            // Template 1 (Outdoor)
             if (templateSelect.value === "1000158560.png") {
-                // Outdoor Unit - Template 1
-                ctx.fillText(unitId, 420, 85);
-                ctx.fillText(room, 420, 140);
-                ctx.fillText(brand, 420, 195);
-                ctx.fillText(type, 420, 250);
-                ctx.fillText(cooling, 420, 305);
-                ctx.fillText(refrigerant, 420, 415); // Pressure ကြားထဲမှာရှိလို့ နေရာချန်ထားပေးပါတယ်
-            } else {
-                // Indoor Unit - Template 2
-                ctx.fillText(unitId, 420, 95);
-                ctx.fillText(room, 420, 175);
-                ctx.fillText(brand, 420, 255);
-                ctx.fillText(type, 420, 335);
-                ctx.fillText(cooling, 420, 415);
-                ctx.fillText(refrigerant, 420, 495);
+                // Adjust Y coordinates to align perfectly with the labels
+                ctx.fillText(unitId, textX, 88);
+                ctx.fillText(room, textX, 142);
+                ctx.fillText(brand, textX, 196);
+                ctx.fillText(type, textX, 250);
+                ctx.fillText(cooling, textX, 304);
+                ctx.fillText(refrigerant, textX, 412); // Positioned between labels
+            } 
+            // Template 2 (Indoor)
+            else {
+                // Adjust Y coordinates for Template 2's layout
+                ctx.fillText(unitId, textX, 100);
+                ctx.fillText(room, textX, 180);
+                ctx.fillText(brand, textX, 260);
+                ctx.fillText(type, textX, 340);
+                ctx.fillText(cooling, textX, 420);
+                ctx.fillText(refrigerant, textX, 500);
             }
 
+            // Update Low-Res Preview
             previewImg.src = canvas.toDataURL('image/jpeg', 0.8);
         };
     }
 
-    document.querySelectorAll('input, select').forEach(el => {
-        el.addEventListener('input', updateSticker);
+    // Auto-update on any input change
+    document.querySelectorAll('input, select').forEach(element => {
+        element.addEventListener('input', updateSticker);
     });
 
+    // High-Res Download Function
     function downloadImage() {
         const link = document.createElement('a');
-        const name = document.getElementById('unitId').value || 'Sticker';
-        link.download = name + '.jpg';
-        link.href = canvas.toDataURL('image/jpeg', 1.0);
+        const fileName = document.getElementById('unitId').value || 'ac_sticker';
+        link.download = fileName + '.jpg';
+        link.href = canvas.toDataURL('image/jpeg', 1.0); // Maximum quality
         link.click();
     }
 
+    // Initial load
     window.onload = updateSticker;
 </script>
 
