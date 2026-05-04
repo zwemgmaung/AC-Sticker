@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AC Sticker - Final Fix V2</title>
+    <title>AC Sticker - Outdoor Alignment Pro</title>
     <style>
         body { font-family: sans-serif; padding: 15px; background: #f4f7f6; text-align: center; }
         .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
@@ -49,7 +49,7 @@
     function update() {
         const img = new Image();
         const selected = document.getElementById('template').value;
-        img.src = selected + "?t=" + new Date().getTime(); // Browser cache ကိုကျော်ရန်
+        img.src = selected + "?t=" + new Date().getTime();
         img.onload = function() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
@@ -65,18 +65,20 @@
             const refrigerant = document.getElementById('refrigerant').value;
 
             if (selected === "1000158560.png") {
-                // Outdoor Unit - စာသားများကို အောက်သို့ ထပ်နှိမ့်ပေးထားပါသည် (Y Coordinates)
+                // Outdoor Unit - စာသားများကို သိသိသာသာ ထပ်နှိမ့်လိုက်ပါပြီ
                 const xStart = 465; 
                 const xMid = 620;   
 
-                ctx.fillText(unitId, xStart, 85);   // Unit ID
-                ctx.fillText(room, xStart, 148);    // Room
-                ctx.fillText(brand, xStart, 211);   // Brand
-                ctx.fillText(type, xStart, 274);    // Type
-                ctx.fillText(cooling, xMid, 337);   // HP Line (မျဉ်းကြောင်းပေါ်ကွက်တိ)
-                ctx.fillText(refrigerant, xMid, 400); // Gas Line
+                ctx.fillText(unitId, xStart, 118);   // Unit ID line (နှိမ့်လိုက်သော Coordinate)
+                ctx.fillText(room, xStart, 182);    // Room line
+                ctx.fillText(brand, xStart, 246);   // Brand line
+                ctx.fillText(type, xStart, 310);    // Type line
+                
+                // HP နဲ့ Gas နေရာကို မျဉ်းကြောင်းပေါ် တင်ခြင်း
+                ctx.fillText(cooling, xMid, 374);
+                ctx.fillText(refrigerant, xMid, 438);
             } else {
-                // Indoor Unit - ကိုကို စိတ်တိုင်းကျပြီးသား (လုံးဝမထိပါ)
+                // Indoor Unit - မူရင်းအတိုင်း ထားပေးပါသည်
                 const xLeft = 465;
                 const xRight = 720;
                 ctx.fillText(unitId, xLeft, 125);
