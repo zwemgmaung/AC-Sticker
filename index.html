@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AC Sticker - Outdoor Alignment Pro</title>
+    <title>AC Sticker - Precision Alignment</title>
     <style>
         body { font-family: sans-serif; padding: 15px; background: #f4f7f6; text-align: center; }
         .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
@@ -39,7 +39,7 @@
     <img id="preview" src="" alt="Preview">
 </div>
 
-<canvas id="mainCanvas" width="1080" height="1350"></canvas>
+<canvas id="mainCanvas" width="1080" height="1420"></canvas>
 
 <script>
     const canvas = document.getElementById('mainCanvas');
@@ -55,7 +55,7 @@
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
             
             ctx.fillStyle = "black";
-            ctx.font = "bold 52px sans-serif";
+            ctx.font = "bold 58px sans-serif";
 
             const unitId = document.getElementById('unitId').value;
             const room = document.getElementById('room').value;
@@ -65,20 +65,21 @@
             const refrigerant = document.getElementById('refrigerant').value;
 
             if (selected === "1000158560.png") {
-                // Outdoor Unit - စာသားများကို သိသိသာသာ ထပ်နှိမ့်လိုက်ပါပြီ
-                const xStart = 465; 
-                const xMid = 620;   
+                // Outdoor Unit - ဒုတိယပုံကို တိတိကျကျတိုင်းတာချက် (Y Coordinates များကို တိုးမြှင့်ထားသည်)
+                const xStart = 460; // စာသားအစ
+                const xHP = 720;    // HP အတွက်
+                const xGas = 650;   // Gas အတွက်
 
-                ctx.fillText(unitId, xStart, 118);   // Unit ID line (နှိမ့်လိုက်သော Coordinate)
-                ctx.fillText(room, xStart, 182);    // Room line
-                ctx.fillText(brand, xStart, 246);   // Brand line
-                ctx.fillText(type, xStart, 310);    // Type line
+                ctx.fillText(unitId, xStart, 105);   // Unit ID မျဉ်းပေါ်
+                ctx.fillText(room, xStart, 168);     // Room မျဉ်းပေါ်
+                ctx.fillText(brand, xStart, 231);    // Brand မျဉ်းပေါ်
+                ctx.fillText(type, xStart, 294);     // Type မျဉ်းပေါ်
                 
-                // HP နဲ့ Gas နေရာကို မျဉ်းကြောင်းပေါ် တင်ခြင်း
-                ctx.fillText(cooling, xMid, 374);
-                ctx.fillText(refrigerant, xMid, 438);
+                // ဒုတိယပုံစံအတိုင်း မျဉ်းအလယ်လောက် ရွှေ့ခြင်း
+                ctx.fillText(cooling, xHP, 357);
+                ctx.fillText(refrigerant, xGas, 420);
             } else {
-                // Indoor Unit - မူရင်းအတိုင်း ထားပေးပါသည်
+                // Indoor Unit - ကိုကို စိတ်တိုင်းကျပြီးသား (လုံးဝမထိပါ)
                 const xLeft = 465;
                 const xRight = 720;
                 ctx.fillText(unitId, xLeft, 125);
