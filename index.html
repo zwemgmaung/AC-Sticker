@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AC Sticker App - Precision Alignment</title>
+    <title>AC Sticker - Final Precision Alignment</title>
     <style>
-        body { font-family: sans-serif; padding: 15px; background: #f4f7f6; text-align: center; }
-        .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        body { font-family: sans-serif; padding: 15px; background: #1a1a1a; text-align: center; color: white; }
+        .container { max-width: 500px; margin: auto; background: #2d2d2d; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
         .form-group { text-align: left; margin-bottom: 8px; }
-        label { display: block; font-weight: bold; margin-bottom: 2px; font-size: 13px; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 2px; font-size: 13px; color: #bbb; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #444; border-radius: 6px; font-size: 15px; background: #3d3d3d; color: white; }
         button { background: #28a745; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 15px; }
-        #preview { width: 100%; border-radius: 8px; border: 1px solid #ddd; margin-top: 15px; }
+        #preview { width: 100%; border-radius: 8px; border: 1px solid #444; margin-top: 15px; }
         canvas { display: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2 style="color: #1a73e8; margin-bottom: 15px;">AC Sticker App</h2>
+    <h2 style="color: #4caf50; margin-bottom: 15px;">AC Sticker App</h2>
     
     <div class="form-group">
         <label>Select Unit Type:</label>
@@ -65,20 +65,20 @@
             const refrigerant = document.getElementById('refrigerant').value;
 
             if (selected === "1000158560.png") {
-                // Outdoor Unit - စာသားများကို အောက်ဘက်သို့ သိသိသာသာ ထပ်နှိမ့်ပေးလိုက်ပါသည်
-                const xStart = 470; // စာသားစတင်မည့် ညာဘက်ခြမ်း
-                const xHP = 740;    // Cooling မျဉ်းကြောင်းပေါ်ရှိ HP ရှေ့နေရာ
-                const xGas = 680;   // Refrigerant မျဉ်းကြောင်းပေါ်နေရာ
+                // Outdoor Unit - Screenshot အရ အနိမ့်အမြင့်ကို Pixel ၃၀ ခန့် ထပ်နှိမ့်လိုက်ပါသည်
+                const xStart = 465; 
+                const xMid = 630;   
 
-                // မျဉ်းကြောင်းတစ်ကြောင်းစီ၏ Y-Coordinates (Pixels)
-                ctx.fillText(unitId, xStart, 102);   // မျဉ်းကြောင်း (၁)
-                ctx.fillText(room, xStart, 165);     // မျဉ်းကြောင်း (၂)
-                ctx.fillText(brand, xStart, 228);    // မျဉ်းကြောင်း (၃)
-                ctx.fillText(type, xStart, 291);     // မျဉ်းကြောင်း (၄)
-                ctx.fillText(cooling, xHP, 354);     // မျဉ်းကြောင်း (၅) - HP
-                ctx.fillText(refrigerant, xGas, 417); // မျဉ်းကြောင်း (၆) - Gas
+                ctx.fillText(unitId, xStart, 115);   // Unit ID line
+                ctx.fillText(room, xStart, 178);     // Room line
+                ctx.fillText(brand, xStart, 241);    // Brand line
+                ctx.fillText(type, xStart, 304);     // Type line
+                
+                // HP နဲ့ Gas နေရာကို မျဉ်းကြောင်းပေါ် တင်ခြင်း
+                ctx.fillText(cooling, xMid + 50, 367);
+                ctx.fillText(refrigerant, xMid + 30, 430);
             } else {
-                // Indoor Unit - ကိုကို အဆင်ပြေနေသော မူရင်းနေရာများ
+                // Indoor Unit - မူရင်းအတိုင်း
                 const xLeft = 465;
                 const xRight = 720;
                 ctx.fillText(unitId, xLeft, 125);
