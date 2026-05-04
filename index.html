@@ -3,14 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AC Sticker - Custom Alignment Fix</title>
+    <title>AC Sticker - Bulk App</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         body { font-family: sans-serif; padding: 15px; background: #1a1a1a; text-align: center; color: white; }
         .container { max-width: 500px; margin: auto; background: #2d2d2d; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        .form-group { text-align: left; margin-bottom: 8px; }
-        label { display: block; font-weight: bold; margin-bottom: 2px; font-size: 13px; color: #bbb; }
+        .form-group { text-align: left; margin-bottom: 8px; border-bottom: 1px solid #444; padding-bottom: 8px; }
+        label { display: block; font-weight: bold; margin-bottom: 2px; font-size: 13px; color: #4caf50; }
         input, select { width: 100%; padding: 10px; border: 1px solid #444; border-radius: 6px; font-size: 15px; background: #3d3d3d; color: white; }
-        button { background: #28a745; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 15px; }
+        .btn-green { background: #28a745; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 15px; }
+        .btn-blue { background: #1a73e8; margin-top: 10px; }
+        #status { margin-top: 10px; font-size: 13px; color: #ffeb3b; }
         #preview { width: 100%; border-radius: 8px; border: 1px solid #444; margin-top: 15px; }
         canvas { display: none; }
     </style>
@@ -20,6 +23,15 @@
 <div class="container">
     <h2 style="color: #4caf50; margin-bottom: 15px;">AC Sticker App</h2>
     
+    <div class="form-group">
+        <label>၁။ Excel (CSV) ဖိုင်တင်ရန် (Bulk ထုတ်ဖို့)</label>
+        <input type="file" id="csvInput" accept=".csv">
+        <button id="bulkBtn" class="btn-green btn-blue">စတစ်ကာများအားလုံး (ZIP) ထုတ်မည်</button>
+        <div id="status"></div>
+    </div>
+
+    <hr style="border: 0.5px solid #444; margin: 20px 0;">
+
     <div class="form-group">
         <label>Select Unit Type:</label>
         <select id="template">
@@ -35,7 +47,7 @@
     <div class="form-group"><label>Cooling Capacity (HP):</label><select id="cooling"><option>1.5</option><option selected>2</option><option>3</option></select></div>
     <div class="form-group"><label>Refrigerant Type:</label><select id="refrigerant"><option>R-22a</option><option selected>R-32a</option><option>R-410a</option></select></div>
 
-    <button onclick="downloadImage()">DOWNLOAD HD STICKER</button>
+    <button onclick="downloadImage()" class="btn-green">တစ်ခုချင်းစီ DOWNLOAD ဆွဲမည်</button>
     <img id="preview" src="" alt="Preview">
 </div>
 
@@ -45,60 +57,110 @@
     const canvas = document.getElementById('mainCanvas');
     const ctx = canvas.getContext('2d');
     const previewImg = document.getElementById('preview');
+    const templateSelect = document.getElementById('template');
+    const bulkBtn = document.getElementById('bulkBtn');
+    const statusDiv = document.getElementById('status');
 
-    function update() {
-        const img = new Image();
-        const selected = document.getElementById('template').value;
-        img.src = selected + "?t=" + new Date().getTime();
-        img.onload = function() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            
-            ctx.fillStyle = "black";
-            ctx.font = "bold 56px sans-serif";
+    // Drawing Function (Manual & Bulk နှစ်ခုလုံးအတွက်)
+    function drawSticker(data, selectedTemplate) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.src = selectedTemplate + "?t=" + new Date().getTime();
+            img.onload = function() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = "black";
+                ctx.font = "bold 56px sans-serif";
 
-            const unitId = document.getElementById('unitId').value;
-            const room = document.getElementById('room').value;
-            const brand = document.getElementById('brand').value;
-            const type = document.getElementById('type').value;
-            const cooling = document.getElementById('cooling').value;
-            const refrigerant = document.getElementById('refrigerant').value;
-
-            if (selected === "1000158560.png") {
-                // Outdoor Unit - ကိုကို့ရဲ့ Custom Alignment
-                const xStart = 465; 
-                const xMid = 630;   
-
-                // Y coordinates ပြင်ဆင်ချက်များ
-                ctx.fillText(unitId, xStart, 128);   // Unit ID (50px ပြန်တင်ထားသည်)
-                ctx.fillText(room, xStart, 196);     // Room (50px ပြန်တင်ထားသည်)
-                ctx.fillText(brand, xStart, 269);    // Brand (40px ပြန်တင်ထားသည်)
-                ctx.fillText(type, xStart, 347);     // Type (20px ပြန်တင်ထားသည်)
-                ctx.fillText(cooling, xMid + 50, 425); // အရင်အတိုင်း (ကွက်တိဖြစ်နေသောနေရာ)
-                ctx.fillText(refrigerant, xMid + 30, 493); // အရင်အတိုင်း (ကွက်တိဖြစ်နေသောနေရာ)
-            } else {
-                // Indoor Unit - လုံးဝမထိပါ
-                const xLeft = 465;
-                const xRight = 720;
-                ctx.fillText(unitId, xLeft, 125);
-                ctx.fillText(room, xLeft, 235);
-                ctx.fillText(brand, xLeft, 345);
-                ctx.fillText(type, xLeft, 455);
-                ctx.fillText(cooling + " HP", xRight, 575);
-                ctx.fillText(refrigerant, xRight, 690);
-            }
-            previewImg.src = canvas.toDataURL('image/jpeg', 0.8);
-        };
+                if (selectedTemplate === "1000158560.png") {
+                    const xStart = 465; const xMid = 630;   
+                    ctx.fillText(data.unitId, xStart, 128);
+                    ctx.fillText(data.room, xStart, 191);
+                    ctx.fillText(data.brand, xStart, 264);
+                    ctx.fillText(data.type, xStart, 347);
+                    ctx.fillText(data.cooling, xMid + 50, 425);
+                    ctx.fillText(data.refrigerant, xMid + 30, 493);
+                } else {
+                    const xLeft = 465; const xRight = 720;
+                    ctx.fillText(data.unitId, xLeft, 125);
+                    ctx.fillText(data.room, xLeft, 235);
+                    ctx.fillText(data.brand, xLeft, 345);
+                    ctx.fillText(data.type, xLeft, 455);
+                    ctx.fillText(data.cooling + " HP", xRight, 575);
+                    ctx.fillText(data.refrigerant, xRight, 690);
+                }
+                resolve();
+            };
+        });
     }
 
-    document.querySelectorAll('input, select').forEach(el => el.oninput = update);
+    // Manual Preview Update
+    async function updatePreview() {
+        const data = {
+            unitId: document.getElementById('unitId').value,
+            room: document.getElementById('room').value,
+            brand: document.getElementById('brand').value,
+            type: document.getElementById('type').value,
+            cooling: document.getElementById('cooling').value,
+            refrigerant: document.getElementById('refrigerant').value
+        };
+        await drawSticker(data, templateSelect.value);
+        previewImg.src = canvas.toDataURL('image/jpeg', 0.8);
+    }
+
+    // Bulk Generation (Excel/CSV)
+    bulkBtn.addEventListener('click', async () => {
+        const file = document.getElementById('csvInput').files[0];
+        if (!file) { alert("ကိုကို... CSV ဖိုင်အရင်ရွေးပေးပါရှင်"); return; }
+
+        bulkBtn.disabled = true;
+        statusDiv.innerText = "စတစ်ကာများ ထုတ်နေပါပြီ ခဏစောင့်ပါ...";
+        
+        const text = await file.text();
+        const lines = text.split('\n');
+        const zip = new JSZip();
+        const selectedTemplate = templateSelect.value;
+
+        // Skip header (i=1)
+        for (let i = 1; i < lines.length; i++) {
+            const cols = lines[i].split(',');
+            if (cols.length < 2) continue;
+
+            const data = {
+                unitId: cols[1]?.trim() || "",
+                room: cols[2]?.trim() || "",
+                brand: cols[3]?.trim() || "Summit",
+                type: cols[4]?.trim() || "Wall-Mounted",
+                cooling: cols[5]?.trim() || "2",
+                refrigerant: cols[6]?.trim() || "R-32a"
+            };
+
+            await drawSticker(data, selectedTemplate);
+            const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', 0.9));
+            zip.file(data.unitId.replace(/[/\\?%*:|"<>]/g, '-') + ".jpg", blob);
+            statusDiv.innerText = `${i} / ${lines.length - 1} စုံ ပြီးပါပြီ...`;
+        }
+
+        const content = await zip.generateAsync({type: "blob"});
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(content);
+        link.download = "CitySchool_Stickers.zip";
+        link.click();
+        
+        statusDiv.innerText = "အားလုံးပြီးပါပြီ ကိုကို!";
+        bulkBtn.disabled = false;
+        updatePreview();
+    });
+
+    document.querySelectorAll('input, select').forEach(el => el.oninput = updatePreview);
     function downloadImage() {
         const link = document.createElement('a');
         link.download = (document.getElementById('unitId').value || 'Sticker') + '.jpg';
         link.href = canvas.toDataURL('image/jpeg', 1.0);
         link.click();
     }
-    window.onload = update;
+    window.onload = updatePreview;
 </script>
 </body>
 </html>
