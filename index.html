@@ -3,20 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AC Sticker - Pro Control App</title>
+    <title>AC Sticker - Ultimate Precision Control</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         body { font-family: sans-serif; padding: 10px; background: #1a1a1a; color: white; text-align: center; }
-        .container { max-width: 650px; margin: auto; background: #2d2d2d; padding: 15px; border-radius: 12px; display: flex; flex-wrap: wrap; gap: 15px; }
-        .form-side { flex: 1.2; min-width: 300px; text-align: left; }
-        .preview-side { flex: 0.8; min-width: 250px; }
+        .container { max-width: 900px; margin: auto; display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; }
+        .controls { flex: 1.2; min-width: 350px; background: #2d2d2d; padding: 15px; border-radius: 12px; text-align: left; height: 90vh; overflow-y: auto; }
+        .preview-side { flex: 0.8; min-width: 300px; position: sticky; top: 10px; }
         .section { background: #333; padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid #444; }
-        h3 { color: #4caf50; font-size: 14px; margin: 0 0 10px 0; border-bottom: 1px solid #555; padding-bottom: 5px; }
+        h3 { color: #4caf50; font-size: 15px; margin: 0 0 10px 0; border-bottom: 1px solid #555; padding-bottom: 5px; }
         label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #ccc; }
-        input[type="text"], select { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 6px; border: 1px solid #ccc; background: #fff; color: #333; appearance: auto; }
-        .slider-box { background: #444; padding: 8px; border-radius: 6px; margin-bottom: 8px; }
-        .slider-label { display: flex; justify-content: space-between; font-size: 11px; color: #4caf50; }
-        input[type="range"] { width: 100%; margin: 5px 0; }
+        input[type="text"], input[type="number"], select { padding: 8px; border-radius: 6px; border: 1px solid #ccc; background: #fff; color: #333; appearance: auto; }
+        .control-row { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; background: #444; padding: 8px; border-radius: 6px; }
+        .control-row label { width: 60px; margin: 0; color: #4caf50; }
+        input[type="range"] { flex: 1; }
+        input[type="number"] { width: 65px; text-align: center; font-weight: bold; }
         button { width: 100%; padding: 14px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; margin-top: 5px; }
         .btn-dl { background: #28a745; color: white; }
         .btn-zip { background: #1a73e8; color: white; margin-top: 10px; }
@@ -27,32 +28,49 @@
 <body>
 
 <div class="container">
-    <div class="form-side">
+    <div class="controls">
         <div class="section">
-            <h3>၁။ ဒေတာထည့်ရန်</h3>
-            <select id="template" onchange="update()">
+            <h3>၁။ အခြေခံ အချက်အလက်</h3>
+            <select id="template" onchange="resetCoords()">
                 <option value="1000158560.png" selected>Outdoor Unit</option>
                 <option value="1000158556.png">Indoor Unit</option>
             </select>
-            <input type="text" id="unitId" value="FCU-G-01">
-            <input type="text" id="room" value="M&E Control Room">
-            <select id="brand"><option selected>SUMMIT</option><option>DAIKIN</option><option>CHIGO</option></select>
-            <select id="type"><option selected>Wall-Mounted</option><option>Ceiling Cassette</option></select>
-            <div style="display:flex; gap:10px;">
-                <select id="cooling"><option>1.5</option><option selected>2</option><option>3</option></select>
-                <select id="refrigerant"><option selected>R-32a</option><option>R-410a</option></select>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px;">
+                <input type="text" id="unitId" value="CU-G-01">
+                <input type="text" id="room" value="M&E Room">
+                <input type="text" id="brand" value="SUMMIT">
+                <input type="text" id="type" value="Wall-Mounted">
+                <input type="text" id="cooling" value="2">
+                <input type="text" id="refrigerant" value="R-32a">
             </div>
         </div>
 
-        <div class="section">
-            <h3>၂။ အနိမ့်အမြင့် ချိန်ရန် (Y Position)</h3>
-            <div class="slider-box"><div class="slider-label"><span>Unit ID Y:</span><b id="vy1">130</b></div><input type="range" id="y1" min="50" max="800" value="130"></div>
-            <div class="slider-box"><div class="slider-label"><span>Room Y:</span><b id="vy2">235</b></div><input type="range" id="y2" min="50" max="800" value="235"></div>
-            <div class="slider-box"><div class="slider-label"><span>Brand Y:</span><b id="vy3">345</b></div><input type="range" id="y3" min="50" max="800" value="345"></div>
-            <div class="slider-box"><div class="slider-label"><span>Type Y:</span><b id="vy4">455</b></div><input type="range" id="y4" min="50" max="800" value="455"></div>
-            <div class="slider-box"><div class="slider-label"><span>Capacity Y:</span><b id="vy5">560</b></div><input type="range" id="y5" min="50" max="800" value="560"></div>
-            <div class="slider-box"><div class="slider-label"><span>Refrigerant Y:</span><b id="vy6">675</b></div><input type="range" id="y6" min="50" max="800" value="675"></div>
-        </div>
+        <h3>၂။ X & Y နေရာညှိရန် (Slider သို့မဟုတ် ဂဏန်းရိုက်ထည့်ပါ)</h3>
+        
+        <script>
+            const lines = ["Unit ID", "Room", "Brand", "Type", "Capacity", "Gas"];
+            const defaults = {
+                "1000158560.png": { x: [566, 526, 565, 518, 693, 627], y: [106, 166, 223, 284, 343, 401] },
+                "1000158556.png": { x: [480, 480, 480, 480, 720, 720], y: [130, 235, 345, 455, 560, 675] }
+            };
+
+            lines.forEach((name, i) => {
+                document.write(`
+                <div class="section">
+                    <label>${name}</label>
+                    <div class="control-row">
+                        <label>X:</label>
+                        <input type="range" id="x${i}" min="0" max="1000" oninput="sync(${i}, 'x', this.value)">
+                        <input type="number" id="nx${i}" oninput="sync(${i}, 'x', this.value)">
+                    </div>
+                    <div class="control-row">
+                        <label>Y:</label>
+                        <input type="range" id="y${i}" min="0" max="1000" oninput="sync(${i}, 'y', this.value)">
+                        <input type="number" id="ny${i}" oninput="sync(${i}, 'y', this.value)">
+                    </div>
+                </div>`);
+            });
+        </script>
     </div>
 
     <div class="preview-side">
@@ -74,6 +92,21 @@
     const ctx = canvas.getContext('2d');
     const previewImg = document.getElementById('preview');
 
+    function sync(i, axis, val) {
+        document.getElementById(axis + i).value = val;
+        document.getElementById('n' + axis + i).value = val;
+        update();
+    }
+
+    function resetCoords() {
+        const temp = document.getElementById('template').value;
+        const data = defaults[temp];
+        for(let i=0; i<6; i++) {
+            sync(i, 'x', data.x[i]);
+            sync(i, 'y', data.y[i]);
+        }
+    }
+
     function drawSticker(data, template) {
         return new Promise((resolve) => {
             const img = new Image();
@@ -85,39 +118,28 @@
                 ctx.font = "bold 56px sans-serif";
                 ctx.lineWidth = 4;
 
-                // Slider Values
-                const y1=parseInt(document.getElementById('y1').value);
-                const y2=parseInt(document.getElementById('y2').value);
-                const y3=parseInt(document.getElementById('y3').value);
-                const y4=parseInt(document.getElementById('y4').value);
-                const y5=parseInt(document.getElementById('y5').value);
-                const y6=parseInt(document.getElementById('y6').value);
+                const getVal = (axis, i) => parseInt(document.getElementById(axis + i).value);
 
                 if (template === "1000158560.png") {
-                    // Outdoor Fixed X-Coordinates
-                    ctx.fillText(data.unitId, 566, y1-24);
-                    ctx.fillText(data.room, 526, y2-69);
-                    ctx.fillText(data.brand, 565, y3-122);
-                    ctx.fillText(data.type, 518, y4-171);
-                    ctx.fillText(data.cooling, 693, y5-217);
-                    ctx.fillText(data.refrigerant, 627, y6-274);
+                    ctx.fillText(data.unitId, getVal('x',0), getVal('y',0));
+                    ctx.fillText(data.room, getVal('x',1), getVal('y',1));
+                    ctx.fillText(data.brand, getVal('x',2), getVal('y',2));
+                    ctx.fillText(data.type, getVal('x',3), getVal('y',3));
+                    ctx.fillText(data.cooling, getVal('x',4), getVal('y',4));
+                    ctx.fillText(data.refrigerant, getVal('x',5), getVal('y',5));
                 } else {
-                    // Indoor Alignment & Precision Lines
-                    const xL = 480; const xCol = 400; const lineE = 960;
+                    ctx.fillText(data.unitId, getVal('x',0), getVal('y',0));
+                    ctx.fillText(data.room, getVal('x',1), getVal('y',1));
+                    ctx.fillText(":", getVal('x',2)-80, getVal('y',2));
+                    ctx.fillText(data.brand, getVal('x',2), getVal('y',2));
+                    ctx.fillText(data.type, getVal('x',3), getVal('y',3));
+                    ctx.fillText(data.cooling + " HP", getVal('x',4), getVal('y',4));
+                    ctx.fillText(data.refrigerant, getVal('x',5), getVal('y',5));
                     
-                    ctx.fillText(data.unitId, xL, y1);
-                    ctx.fillText(data.room, xL, y2);
-                    ctx.fillText(":", xCol, y3);
-                    ctx.fillText(data.brand, xL, y3);
-                    ctx.fillText(data.type, xL, y4);
-                    ctx.fillText(data.cooling + " HP", 720, y5);
-                    ctx.fillText(data.refrigerant, 720, y6);
-
+                    const lineE = 960;
                     const dL = (xS, y) => { ctx.beginPath(); ctx.moveTo(xS, y+12); ctx.lineTo(lineE, y+12); ctx.stroke(); };
-                    dL(xL, y1); dL(xL, y2); dL(xL, y3); dL(xL, y4);
-                    
-                    // ကိုကိုမှာထားတဲ့အတိုင်း Capacity နဲ့ Gas မျဉ်းကို : (X=400) အထိ ဆွဲပေးထားပါတယ်
-                    dL(xCol, y5); dL(xCol, y6); 
+                    dL(getVal('x',0), getVal('y',0)); dL(getVal('x',1), getVal('y',1)); dL(getVal('x',2), getVal('y',2)); dL(getVal('x',3), getVal('y',3));
+                    dL(400, getVal('y',4)); dL(400, getVal('y',5));
                 }
                 resolve();
             };
@@ -125,7 +147,6 @@
     }
 
     async function update() {
-        for(let i=1; i<=6; i++) { document.getElementById('vy'+i).innerText = document.getElementById('y'+i).value; }
         const data = {
             unitId: document.getElementById('unitId').value, room: document.getElementById('room').value,
             brand: document.getElementById('brand').value, type: document.getElementById('type').value,
@@ -164,7 +185,7 @@
     });
 
     document.querySelectorAll('input, select').forEach(el => el.oninput = update);
-    window.onload = update;
+    window.onload = resetCoords;
 </script>
 </body>
 </html>
