@@ -3,88 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AC Sticker - Individual Line Control</title>
+    <title>AC Sticker - Fixed Coordinates App</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         body { font-family: sans-serif; padding: 10px; background: #1a1a1a; color: white; text-align: center; }
-        .container { max-width: 800px; margin: auto; display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; }
-        .controls { flex: 1; min-width: 300px; background: #2d2d2d; padding: 15px; border-radius: 12px; text-align: left; }
-        .preview-side { flex: 1; min-width: 300px; }
-        .section { background: #333; padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #444; }
-        h3 { color: #4caf50; font-size: 14px; margin: 0 0 10px 0; border-bottom: 1px solid #555; }
-        label { display: block; font-size: 11px; color: #aaa; }
-        input[type="text"], select { width: 100%; padding: 8px; margin-bottom: 8px; border-radius: 4px; border: none; font-size: 13px; }
-        .slider-box { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
-        .slider-box span { font-size: 10px; width: 50px; color: #4caf50; }
-        input[type="range"] { flex: 1; }
-        button { width: 100%; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; margin-top: 5px; }
-        .btn-dl { background: #28a745; color: white; }
-        .btn-zip { background: #1a73e8; color: white; margin-top: 10px; }
-        #preview { width: 100%; border-radius: 8px; border: 2px solid #444; }
+        .container { max-width: 550px; margin: auto; background: #2d2d2d; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .section { text-align: left; margin-bottom: 15px; padding: 15px; border: 1px solid #444; border-radius: 10px; background: #333; }
+        h3 { color: #4caf50; font-size: 16px; margin: 0 0 10px 0; border-bottom: 1px solid #555; padding-bottom: 5px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 13px; color: #ccc; }
+        
+        /* Drop-down arrow ပြန်ပေါ်ရန်နှင့် အဖြူရောင်ဖြစ်ရန် */
+        input, select { 
+            width: 100%; 
+            padding: 12px; 
+            border: 1px solid #ccc; 
+            border-radius: 8px; 
+            font-size: 15px; 
+            background: #ffffff; 
+            color: #333; 
+            box-sizing: border-box; 
+            margin-bottom: 12px;
+            appearance: auto; /* Arrow ပြန်ဖော်ပေးခြင်း */
+        }
+        
+        button { color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-zip { background: #1a73e8; margin-bottom: 10px; }
+        .btn-dl { background: #28a745; }
+        #status { margin-top: 10px; font-size: 13px; color: #ffeb3b; }
+        #preview { width: 100%; border-radius: 8px; border: 2px solid #444; margin-top: 10px; }
         canvas { display: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="controls">
-        <h3>၁။ ဒေတာနှင့် ပုံစံရွေးရန်</h3>
-        <select id="template" onchange="update()">
-            <option value="1000158560.png">Outdoor Unit</option>
+    <h2 style="color: #4caf50;">CITY SCHOOL Sticker Master</h2>
+
+    <div class="section">
+        <h3>၁။ Bulk (Zip) ထုတ်ရန်</h3>
+        <input type="file" id="csvInput" accept="*/*">
+        <button id="bulkBtn" class="btn-zip">CSV ဖြင့် ZIP ထုတ်မည်</button>
+        <div id="status"></div>
+    </div>
+
+    <div class="section">
+        <h3>၂။ တစ်ပုံချင်းစီ စစ်ဆေးရန် (Manual)</h3>
+        <label>Unit Type:</label>
+        <select id="template">
+            <option value="1000158560.png" selected>Outdoor Unit</option>
             <option value="1000158556.png">Indoor Unit</option>
         </select>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px;">
-            <input type="text" id="unitId" value="CU-G-01" placeholder="Unit ID">
-            <input type="text" id="room" value="Control Room" placeholder="Room">
-            <input type="text" id="brand" value="SUMMIT" placeholder="Brand">
-            <input type="text" id="type" value="Wall" placeholder="Type">
-            <input type="text" id="cooling" value="2" placeholder="HP">
-            <input type="text" id="refrigerant" value="R-32a" placeholder="Gas">
+        
+        <label>Unit ID:</label><input type="text" id="unitId" value="CU-G-01">
+        <label>Room:</label><input type="text" id="room" value="M&E Control Room">
+        
+        <label>Brand:</label>
+        <select id="brand">
+            <option selected>SUMMIT</option><option>DAIKIN</option><option>CHIGO</option><option>HISENSE</option><option>SHIMAZU</option>
+        </select>
+
+        <label>Type:</label>
+        <select id="type">
+            <option selected>Wall-Mounted</option><option>Ceiling Cassette</option><option>Floor Standing</option>
+        </select>
+
+        <div style="display:flex; gap:10px;">
+            <div style="flex:1;">
+                <label>HP:</label>
+                <select id="cooling"><option>1</option><option>1.5</option><option selected>2</option><option>3</option><option>5</option></select>
+            </div>
+            <div style="flex:1;">
+                <label>Gas:</label>
+                <select id="refrigerant"><option selected>R-32a</option><option>R-410a</option><option>R-22a</option></select>
+            </div>
         </div>
 
-        <h3>၂။ တစ်ကြောင်းချင်းစီ နေရာချိန်ရန် (X & Y)</h3>
-        <div class="section">
-            <label>Line 1 (Unit ID)</label>
-            <div class="slider-box"><span>X: <b id="vx1">480</b></span><input type="range" id="x1" min="300" max="700" value="480"></div>
-            <div class="slider-box"><span>Y: <b id="vy1">130</b></span><input type="range" id="y1" min="50" max="800" value="130"></div>
-        </div>
-        <div class="section">
-            <label>Line 2 (Room)</label>
-            <div class="slider-box"><span>X: <b id="vx2">480</b></span><input type="range" id="x2" min="300" max="700" value="480"></div>
-            <div class="slider-box"><span>Y: <b id="vy2">195</b></span><input type="range" id="y2" min="50" max="800" value="195"></div>
-        </div>
-        <div class="section">
-            <label>Line 3 (Brand)</label>
-            <div class="slider-box"><span>X: <b id="vx3">480</b></span><input type="range" id="x3" min="300" max="700" value="480"></div>
-            <div class="slider-box"><span>Y: <b id="vy3">260</b></span><input type="range" id="y3" min="50" max="800" value="260"></div>
-        </div>
-        <div class="section">
-            <label>Line 4 (Type)</label>
-            <div class="slider-box"><span>X: <b id="vx4">480</b></span><input type="range" id="x4" min="300" max="700" value="480"></div>
-            <div class="slider-box"><span>Y: <b id="vy4">325</b></span><input type="range" id="y4" min="50" max="800" value="325"></div>
-        </div>
-        <div class="section">
-            <label>Line 5 (HP)</label>
-            <div class="slider-box"><span>X: <b id="vx5">410</b></span><input type="range" id="x5" min="300" max="800" value="410"></div>
-            <div class="slider-box"><span>Y: <b id="vy5">395</b></span><input type="range" id="y5" min="50" max="800" value="395"></div>
-        </div>
-        <div class="section">
-            <label>Line 6 (Gas)</label>
-            <div class="slider-box"><span>X: <b id="vx6">660</b></span><input type="range" id="x6" min="300" max="900" value="660"></div>
-            <div class="slider-box"><span>Y: <b id="vy6">395</b></span><input type="range" id="y6" min="50" max="800" value="395"></div>
-        </div>
-    </div>
-
-    <div class="preview-side">
-        <img id="preview" src="" alt="Preview">
         <button onclick="downloadSingle()" class="btn-dl">လက်ရှိပုံကို သိမ်းမည်</button>
-        <div class="section" style="margin-top:15px; text-align:left;">
-            <h3>၃။ Bulk (Zip) ထုတ်ရန်</h3>
-            <input type="file" id="csvInput" accept="*/*" style="background:#444; color:white;">
-            <button id="bulkBtn" class="btn-zip">ZIP ဖိုင်ထုတ်မည်</button>
-            <div id="status" style="font-size:12px; margin-top:5px; color:#ffeb3b;"></div>
-        </div>
     </div>
+
+    <img id="preview" src="" alt="Preview">
 </div>
 
 <canvas id="mainCanvas" width="1080" height="1350"></canvas>
@@ -93,6 +90,7 @@
     const canvas = document.getElementById('mainCanvas');
     const ctx = canvas.getContext('2d');
     const previewImg = document.getElementById('preview');
+    const templateSelect = document.getElementById('template');
 
     function drawSticker(data, template) {
         return new Promise((resolve) => {
@@ -104,35 +102,30 @@
                 ctx.fillStyle = "black";
                 ctx.font = "bold 52px sans-serif";
 
-                // တစ်ကြောင်းချင်းစီအတွက် Slider တန်ဖိုးများကို ယူခြင်း
-                ctx.fillText(data.unitId, document.getElementById('x1').value, document.getElementById('y1').value);
-                ctx.fillText(data.room, document.getElementById('x2').value, document.getElementById('y2').value);
-                
-                // Indoor ဖြစ်ရင် Brand ရှေ့မှာ Colon ထည့်ရန်
-                if(template === "1000158556.png") {
-                    ctx.fillText(":", parseInt(document.getElementById('x3').value) - 80, document.getElementById('y3').value);
+                if (template === "1000158560.png") {
+                    // ကိုကိုပေးထားတဲ့ Outdoor Fixed အမှတ်များ
+                    ctx.fillText(data.unitId, 566, 106);      // Unit ID
+                    ctx.fillText(data.room, 526, 166);         // Room
+                    ctx.fillText(data.brand, 565, 223);        // Brand
+                    ctx.fillText(data.type, 518, 284);         // Type
+                    ctx.fillText(data.cooling, 693, 343);      // HP
+                    ctx.fillText(data.refrigerant, 627, 401);  // Gas
+                } else {
+                    // Indoor Alignment (မူရင်းအတိုင်း)
+                    ctx.fillText(data.unitId, 480, 130);
+                    ctx.fillText(data.room, 480, 235);
+                    ctx.fillText(":", 400, 345);
+                    ctx.fillText(data.brand, 480, 345);
+                    ctx.fillText(data.type, 480, 455);
+                    ctx.fillText(data.cooling + " HP", 720, 560);
+                    ctx.fillText(data.refrigerant, 720, 675);
                 }
-                
-                ctx.fillText(data.brand, document.getElementById('x3').value, document.getElementById('y3').value);
-                ctx.fillText(data.type, document.getElementById('x4').value, document.getElementById('y4').value);
-                
-                // HP နဲ့ Gas (Indoor ဆိုရင် စာသားအပြည့် Outdoor ဆိုရင် တန်ဖိုးပဲ)
-                let hpTxt = (template === "1000158556.png") ? data.cooling + " HP" : data.cooling;
-                ctx.fillText(hpTxt, document.getElementById('x5').value, document.getElementById('y5').value);
-                ctx.fillText(data.refrigerant, document.getElementById('x6').value, document.getElementById('y6').value);
-                
                 resolve();
             };
         });
     }
 
     async function update() {
-        // Slider တန်ဖိုးများကို စာသားဖြင့် ပြသရန်
-        for(let i=1; i<=6; i++) {
-            document.getElementById('vx'+i).innerText = document.getElementById('x'+i).value;
-            document.getElementById('vy'+i).innerText = document.getElementById('y'+i).value;
-        }
-
         const data = {
             unitId: document.getElementById('unitId').value,
             room: document.getElementById('room').value,
@@ -141,7 +134,7 @@
             cooling: document.getElementById('cooling').value,
             refrigerant: document.getElementById('refrigerant').value
         };
-        await drawSticker(data, document.getElementById('template').value);
+        await drawSticker(data, templateSelect.value);
         previewImg.src = canvas.toDataURL('image/jpeg', 0.8);
     }
 
@@ -154,27 +147,28 @@
 
     document.getElementById('bulkBtn').addEventListener('click', async () => {
         const file = document.getElementById('csvInput').files[0];
-        if (!file) { alert("ကိုကို... CSV ဖိုင်အရင်ရွေးပါ"); return; }
+        if (!file) { alert("ကိုကို... CSV ဖိုင်အရင်ရွေးပါရှင်"); return; }
         const text = await file.text();
         const lines = text.split(/\r?\n/).filter(l => l.trim() !== "");
         const zip = new JSZip();
-        const template = document.getElementById('template').value;
-        
+        const template = templateSelect.value;
+        const status = document.getElementById('status');
+
         for (let i = 1; i < lines.length; i++) {
             const c = lines[i].split(',');
             if (c.length < 5) continue;
             const data = { unitId: c[0], room: c[1], brand: c[2], type: c[3], cooling: c[4], refrigerant: c[5] };
             await drawSticker(data, template);
             const b = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.95));
-            zip.file(data.unitId + ".jpg", b);
-            document.getElementById('status').innerText = `${i} / ${lines.length -1} ပြီးပါပြီ...`;
+            zip.file(data.unitId.replace(/[/\\?%*:|"<>]/g, '-') + ".jpg", b);
+            status.innerText = `${i} / ${lines.length - 1} ပြီးပါပြီ...`;
         }
         const content = await zip.generateAsync({type:"blob"});
         const link = document.createElement('a');
         link.href = URL.createObjectURL(content);
-        link.download = "Bulk_Stickers.zip";
+        link.download = (template.includes("1000158560") ? "Outdoor_Stickers.zip" : "Indoor_Stickers.zip");
         link.click();
-        document.getElementById('status').innerText = "အားလုံးပြီးပါပြီ ကိုကို!";
+        status.innerText = "အားလုံးပြီးပါပြီ ကိုကို!";
     });
 
     document.querySelectorAll('input, select').forEach(el => el.oninput = update);
