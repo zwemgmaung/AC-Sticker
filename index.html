@@ -3,42 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AC Sticker - New Template Alignment Fix</title>
+    <title>AC Sticker - Template Update Fix</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
-        body { font-family: sans-serif; padding: 15px; background: #f4f7f6; text-align: center; }
-        .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .form-group { text-align: left; margin-bottom: 8px; }
-        label { display: block; font-weight: bold; margin-bottom: 2px; font-size: 13px; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; }
-        button { background: #28a745; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 15px; }
-        #preview { width: 100%; border-radius: 8px; border: 1px solid #ddd; margin-top: 15px; }
+        body { font-family: sans-serif; padding: 15px; background: #1a1a1a; text-align: center; color: white; }
+        .container { max-width: 550px; margin: auto; background: #2d2d2d; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .section { text-align: left; margin-bottom: 20px; padding: 15px; border: 1px solid #444; border-radius: 10px; background: #333; }
+        h3 { color: #4caf50; margin-top: 0; border-bottom: 1px solid #555; padding-bottom: 5px; font-size: 16px; }
+        label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 13px; color: #ccc; }
+        input, select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; background: #ffffff; color: #333; box-sizing: border-box; margin-bottom: 12px; }
+        button { color: white; border: none; padding: 14px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-bulk { background: #1a73e8; margin-bottom: 10px; }
+        .btn-single { background: #28a745; }
+        #status { margin-top: 10px; font-size: 13px; color: #ffeb3b; text-align: center; }
+        #preview { width: 100%; border-radius: 8px; border: 1px solid #444; margin-top: 15px; }
         canvas { display: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2 style="color: #1a73e8; margin-bottom: 15px;">AC Sticker App (New Template)</h2>
-    
-    <div class="form-group">
-        <label>Select Unit Type:</label>
-        <select id="template">
-            <option value="1000159597.png" selected>New Template (Uses 1000159597.png)</option>
-        </select>
+    <h2 style="color: #4caf50; margin-bottom: 20px;">AC Sticker Master App</h2>
+
+    <div class="section">
+        <h3>၁။ အများကြီး တစ်ခါတည်း ထုတ်ရန် (Bulk)</h3>
+        <label>CSV ဖိုင် ရွေးပေးပါ ကိုကို:</label>
+        <input type="file" id="csvInput" accept="*/*">
+        <button id="bulkBtn" class="btn-bulk">စတစ်ကာများအားလုံး (ZIP) ထုတ်မည်</button>
+        <div id="status"></div>
     </div>
 
-    <div class="form-group"><label>Unit ID:</label><input type="text" id="unitId" value="CU G-01"></div>
-    <div class="form-group"><label>Room:</label><input type="text" id="room" value="M & E Control Room"></div>
-    <div class="form-group"><label>Brand:</label><input type="text" id="brand" value="Summit"></div>
-    <div class="form-group"><label>Type:</label><input type="text" id="type" value="Wall-Mounted"></div>
-    <div class="form-group"><label>Cooling Capacity (HP):</label><input type="text" id="cooling" value="2"></div>
-    <div class="form-group"><label>Refrigerant Type:</label><input type="text" id="refrigerant" value="R-32a"></div>
-    
-    <div class="form-group"><label>Running Pressure (psi):</label><input type="text" id="pressure" value="120"></div>
-    <div class="form-group"><label>Running Ampere (A):</label><input type="text" id="ampere" value="8.5"></div>
-    <div class="form-group"><label>Running Watt (W):</label><input type="text" id="watt" value="1800"></div>
+    <div class="section">
+        <h3>၂။ တစ်ပုံချင်းစီ စိတ်ကြိုက်ထုတ်ရန် (Manual)</h3>
+        <label>Unit Type:</label>
+        <select id="template">
+            <option value="1000158560.png" selected>Outdoor Unit</option>
+            <option value="1000158556.png">Indoor Unit</option>
+        </select>
+        
+        <label>Unit ID:</label><input type="text" id="unitId" value="CU G-01">
+        <label>Room:</label><input type="text" id="room" value="M & E Control Room">
+        <label>Brand:</label><input type="text" id="brand" value="Summit">
+        <label>Type:</label><input type="text" id="type" value="Wall-Mounted">
+        <label>HP:</label><input type="text" id="cooling" value="2">
+        <label>Gas:</label><input type="text" id="refrigerant" value="R-32a">
+        <label>Pressure / Ampere / Watt:</label>
+        <div style="display:flex; gap:5px;">
+            <input type="text" id="pressure" value="120" placeholder="psi">
+            <input type="text" id="ampere" value="8.5" placeholder="A">
+            <input type="text" id="watt" value="1800" placeholder="W">
+        </div>
 
-    <button onclick="downloadImage()">DOWNLOAD HD STICKER</button>
+        <button onclick="downloadSingle()" class="btn-single">လက်ရှိပုံကို ဒေါင်းလုဒ်ဆွဲမည်</button>
+    </div>
+
     <img id="preview" src="" alt="Preview">
 </div>
 
@@ -48,79 +66,109 @@
     const canvas = document.getElementById('mainCanvas');
     const ctx = canvas.getContext('2d');
     const previewImg = document.getElementById('preview');
+    const templateSelect = document.getElementById('template');
+    const bulkBtn = document.getElementById('bulkBtn');
+    const statusDiv = document.getElementById('status');
 
-    function update() {
-        const img = new Image();
-        const selected = document.getElementById('template').value;
-        img.src = selected + "?t=" + new Date().getTime();
-        img.onload = function() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            
-            ctx.fillStyle = "black";
-            ctx.font = "bold 52px sans-serif"; // Font size slightly reduced for new layout
+    function drawSticker(data, selectedTemplate) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.src = selectedTemplate + "?t=" + new Date().getTime();
+            img.onload = function() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "black";
+                ctx.font = "bold 52px sans-serif";
 
-            // Data values
-            const unitId = document.getElementById('unitId').value;
-            const room = document.getElementById('room').value;
-            const brand = document.getElementById('brand').value;
-            const type = document.getElementById('type').value;
-            const cooling = document.getElementById('cooling').value;
-            const refrigerant = document.getElementById('refrigerant').value;
-            const pressure = document.getElementById('pressure').value;
-            const ampere = document.getElementById('ampere').value;
-            const watt = document.getElementById('watt').value;
+                // ပုံစံသစ် (Running Data ပါသောပုံ) အတွက် နေရာချထားမှုများ
+                const xLeft = 475; 
+                const xRight = 720;
+                const xCol2 = 630; // Pressure/Ampere နေရာများအတွက်
 
-            // NEW ALIGNMENT LOGIC (for template 1000159597.png)
-            if (unitId.startsWith('CU')) {
-                // Outdoor Unit - New Coordinates
-                const xLeft = 475; // Y coordinates calculated for CU layout
-                const xPressure = 475; const xAmpere = 475; const xWatt = 475;
-
-                ctx.fillText(unitId, xLeft, 130);   // Unit ID line
-                ctx.fillText(room, xLeft, 195);     // Room line
-                ctx.fillText(brand, xLeft, 260);    // Brand line
-                ctx.fillText(type, xLeft, 325);     // Type line
-                
-                // HP and Gas on same line
-                ctx.fillText(cooling, xLeft, 390);  
-                ctx.fillText(refrigerant, 720, 390);
-
-                // Running Data on distinct lines
-                ctx.fillText(pressure, xPressure, 455);
-                ctx.fillText(ampere, xAmpere, 520);
-                ctx.fillText(watt, xWatt, 585);
-            } else {
-                // Indoor Unit - New Coordinates (Different layout)
-                const xLeft = 475; // Y coordinates calculated for FCU layout
-                const xPressure = 475; const xAmpere = 475; const xWatt = 475;
-
-                ctx.fillText(unitId, xLeft, 130);   // Unit ID line
-                ctx.fillText(room, xLeft, 195);     // Room line
-                ctx.fillText(brand, xLeft, 260);    // Brand line
-                ctx.fillText(type, xLeft, 325);     // Type line
-                
-                // HP and Gas on different lines
-                ctx.fillText(cooling, xLeft, 390);
-                ctx.fillText(refrigerant, xLeft, 455);
-
-                // Running Data on higher positions
-                ctx.fillText(pressure, xPressure, 520);
-                ctx.fillText(ampere, xAmpere, 585);
-                ctx.fillText(watt, xWatt, 650);
-            }
-            previewImg.src = canvas.toDataURL('image/jpeg', 0.8);
-        };
+                if (selectedTemplate === "1000158560.png") {
+                    // Outdoor Alignment (New Template)
+                    ctx.fillText(data.unitId, xLeft, 130);
+                    ctx.fillText(data.room, xLeft, 195);
+                    ctx.fillText(data.brand, xLeft, 260);
+                    ctx.fillText(data.type, xLeft, 325);
+                    ctx.fillText(data.cooling, xLeft, 390);
+                    ctx.fillText(data.refrigerant, xRight, 390);
+                    
+                    // Running Data (အောက်က မျဉ်းကြောင်း ၃ ကြောင်းပေါ်)
+                    ctx.fillText(data.pressure || "", xLeft, 455);
+                    ctx.fillText(data.ampere || "", xLeft, 520);
+                    ctx.fillText(data.watt || "", xLeft, 585);
+                } else {
+                    // Indoor Alignment (New Template)
+                    ctx.fillText(data.unitId, xLeft, 130);
+                    ctx.fillText(data.room, xLeft, 195);
+                    ctx.fillText(":", 395, 260); // Brand ရှေ့က ( : )
+                    ctx.fillText(data.brand, xLeft, 260);
+                    ctx.fillText(data.type, xLeft, 325);
+                    ctx.fillText(data.cooling, xLeft, 390);
+                    ctx.fillText(data.refrigerant, xLeft, 455);
+                    
+                    // Indoor တွင် Running Data ထည့်လိုပါက
+                    ctx.fillText(data.pressure || "", xLeft, 520);
+                    ctx.fillText(data.ampere || "", xLeft, 585);
+                }
+                resolve();
+            };
+        });
     }
 
-    document.querySelectorAll('input, select').forEach(el => el.oninput = update);
-    function downloadImage() {
+    async function updatePreview() {
+        const data = {
+            unitId: document.getElementById('unitId').value,
+            room: document.getElementById('room').value,
+            brand: document.getElementById('brand').value,
+            type: document.getElementById('type').value,
+            cooling: document.getElementById('cooling').value,
+            refrigerant: document.getElementById('refrigerant').value,
+            pressure: document.getElementById('pressure').value,
+            ampere: document.getElementById('ampere').value,
+            watt: document.getElementById('watt').value
+        };
+        await drawSticker(data, templateSelect.value);
+        previewImg.src = canvas.toDataURL('image/jpeg', 0.8);
+    }
+
+    function downloadSingle() {
         const link = document.createElement('a');
         link.download = (document.getElementById('unitId').value || 'Sticker') + '.jpg';
         link.href = canvas.toDataURL('image/jpeg', 1.0);
         link.click();
     }
-    window.onload = update;
+
+    bulkBtn.addEventListener('click', async () => {
+        const file = document.getElementById('csvInput').files[0];
+        if (!file) { alert("ကိုကို... CSV ဖိုင်အရင်ရွေးပေးပါရှင်"); return; }
+        bulkBtn.disabled = true;
+        const text = await file.text();
+        const lines = text.split(/\r?\n/).filter(line => line.trim() !== "");
+        const zip = new JSZip();
+        for (let i = 1; i < lines.length; i++) {
+            const cols = lines[i].split(',');
+            if (cols.length < 5) continue;
+            const data = {
+                unitId: cols[0]?.trim(), room: cols[1]?.trim(), brand: cols[2]?.trim(),
+                type: cols[3]?.trim(), cooling: cols[4]?.trim(), refrigerant: cols[5]?.trim(),
+                pressure: cols[6]?.trim(), ampere: cols[7]?.trim(), watt: cols[8]?.trim()
+            };
+            await drawSticker(data, templateSelect.value);
+            const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', 0.95));
+            zip.file(data.unitId.replace(/[/\\?%*:|"<>]/g, '-') + ".jpg", blob);
+        }
+        const content = await zip.generateAsync({type: "blob"});
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(content);
+        link.download = "Bulk_Stickers.zip";
+        link.click();
+        bulkBtn.disabled = false;
+    });
+
+    document.querySelectorAll('input, select').forEach(el => el.oninput = updatePreview);
+    window.onload = updatePreview;
 </script>
 </body>
 </html>
