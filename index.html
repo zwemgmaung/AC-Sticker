@@ -3,103 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AC Sticker - Fix Preview Sync</title>
+    <title>AC Sticker - Final Precise Version</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         body { font-family: sans-serif; padding: 10px; background: #1a1a1a; color: white; text-align: center; }
-        .container { max-width: 950px; margin: auto; display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; }
-        .controls { flex: 1.2; min-width: 350px; background: #2d2d2d; padding: 15px; border-radius: 12px; text-align: left; height: 95vh; overflow-y: auto; }
-        .preview-side { flex: 0.8; min-width: 300px; position: sticky; top: 10px; }
-        .section { background: #333; padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #444; }
-        h3 { color: #4caf50; font-size: 14px; margin: 0 0 10px 0; border-bottom: 1px solid #555; }
-        label { display: block; font-size: 11px; color: #aaa; margin-bottom: 3px; }
-        input[type="text"], select { width: 100%; padding: 8px; margin-bottom: 8px; border-radius: 4px; border: none; font-size: 13px; }
-        .slider-group { background: #444; padding: 8px; border-radius: 6px; margin-bottom: 8px; }
-        .slider-row { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
-        .slider-row span { font-size: 10px; width: 45px; color: #4caf50; font-weight: bold; }
-        input[type="range"] { flex: 1; cursor: pointer; }
-        input[type="number"] { width: 70px; text-align: center; border-radius: 4px; border: 1px solid #555; font-size: 13px; padding: 5px; background: #fff; color: #000; }
-        button { width: 100%; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; margin-top: 5px; }
-        .btn-dl { background: #28a745; color: white; }
-        .btn-zip { background: #1a73e8; color: white; margin-top: 10px; }
-        #preview { width: 100%; border-radius: 8px; border: 2px solid #444; }
+        .container { max-width: 550px; margin: auto; background: #2d2d2d; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .section { text-align: left; margin-bottom: 15px; padding: 15px; border: 1px solid #444; border-radius: 10px; background: #333; }
+        h3 { color: #4caf50; font-size: 16px; margin: 0 0 10px 0; border-bottom: 1px solid #555; padding-bottom: 5px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 13px; color: #ccc; }
+        
+        input, select { 
+            width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; 
+            background: #ffffff; color: #333; box-sizing: border-box; margin-bottom: 12px;
+            appearance: auto; /* Arrow ပြန်ဖော်ရန် */
+            -webkit-appearance: listbox;
+        }
+        
+        .room-ctrl { background: #444; padding: 10px; border-radius: 8px; margin-bottom: 15px; }
+        .slider-row { display: flex; align-items: center; gap: 10px; }
+        input[type="range"] { flex: 1; }
+        input[type="number"] { width: 70px; text-align: center; margin: 0; }
+
+        button { color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        .btn-zip { background: #1a73e8; margin-bottom: 10px; }
+        .btn-dl { background: #28a745; }
+        #preview { width: 100%; border-radius: 8px; border: 2px solid #444; margin-top: 10px; }
         canvas { display: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="controls">
-        <div class="section">
-            <h3>၁။ အခြေခံအချက်အလက်</h3>
-            <select id="template" onchange="update()">
-                <option value="1000158560.png">Outdoor Unit</option>
-                <option value="1000158556.png" selected>Indoor Unit</option>
-            </select>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px;">
-                <input type="text" id="unitId" value="CU-G-01" oninput="update()">
-                <input type="text" id="room" value="M&E Room" oninput="update()">
-                <input type="text" id="brand" value="SUMMIT" oninput="update()">
-                <input type="text" id="type" value="Wall" oninput="update()">
-                <input type="text" id="cooling" value="2" oninput="update()">
-                <input type="text" id="refrigerant" value="R-32a" oninput="update()">
+    <h2 style="color: #4caf50;">CITY SCHOOL Sticker Master</h2>
+
+    <div class="section">
+        <h3>၁။ Bulk (Zip) ထုတ်ရန်</h3>
+        <input type="file" id="csvInput" accept="*/*">
+        <button id="bulkBtn" class="btn-zip">CSV ဖြင့် ZIP ထုတ်မည်</button>
+        <div id="status" style="font-size:12px; color:#ffeb3b; margin-top:5px;"></div>
+    </div>
+
+    <div class="section">
+        <h3>၂။ တစ်ပုံချင်းစီ စစ်ဆေးရန် (Manual)</h3>
+        <label>Unit Type:</label>
+        <select id="template" onchange="update()">
+            <option value="1000158560.png" selected>Outdoor Unit</option>
+            <option value="1000158556.png">Indoor Unit</option>
+        </select>
+        
+        <label>Unit ID:</label>
+        <input type="text" id="unitId" value="CU-G-01" oninput="update()">
+        
+        <div class="room-ctrl">
+            <label style="color:#4caf50;">Room စာသား ဘယ်/ညာ ညှိရန် (X)</label>
+            <div class="slider-row">
+                <input type="range" id="roomX" min="300" max="800" value="553" oninput="syncX(this.value)">
+                <input type="number" id="numX" value="553" oninput="syncX(this.value)">
             </div>
         </div>
+        <input type="text" id="room" value="Reception and Waiting" oninput="update()">
 
-        <h3>၂။ X & Y နေရာညှိရန်</h3>
-        <div id="sliderContainer"></div>
-    </div>
-
-    <div class="preview-side">
-        <img id="preview" src="" alt="Preview">
-        <button onclick="downloadSingle()" class="btn-dl">လက်ရှိပုံကို သိမ်းမည်</button>
-        <div class="section" style="margin-top:15px; text-align:left;">
-            <h3>၃။ Bulk (Zip) ထုတ်ရန်</h3>
-            <input type="file" id="csvInput" accept="*/*">
-            <button id="bulkBtn" class="btn-zip">ZIP ဖိုင်ထုတ်မည်</button>
-            <div id="status" style="font-size:12px; margin-top:5px; color:#ffeb3b;"></div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px;">
+            <select id="brand" onchange="update()"><option selected>SUMMIT</option><option>DAIKIN</option></select>
+            <select id="type" onchange="update()"><option selected>Wall-Mounted</option><option>Ceiling Cassette</option></select>
+            <select id="cooling" onchange="update()"><option>1.5</option><option selected>2</option><option>3</option></select>
+            <select id="refrigerant" onchange="update()"><option selected>R-32a</option><option>R-410a</option></select>
         </div>
+        <button onclick="downloadSingle()" class="btn-dl">လက်ရှိပုံကို သိမ်းမည်</button>
     </div>
+
+    <img id="preview" src="" alt="Preview">
 </div>
 
 <canvas id="mainCanvas" width="1080" height="1350"></canvas>
 
 <script>
-    const fields = ["Unit ID", "Room", "Brand", "Type", "Capacity", "Gas"];
-    const defX = [415, 415, 415, 415, 650, 650];
-    const defY = [140, 215, 290, 365, 435, 510];
-
-    const sliderContainer = document.getElementById('sliderContainer');
-    fields.forEach((name, i) => {
-        const idx = i + 1;
-        const html = `
-            <div class="slider-group">
-                <label>${name}</label>
-                <div class="slider-row">
-                    <span>X:</span>
-                    <input type="range" id="x${idx}" min="0" max="1080" value="${defX[i]}" oninput="sync(${idx}, 'x', this.value)">
-                    <input type="number" id="nx${idx}" min="0" max="1080" value="${defX[i]}" oninput="sync(${idx}, 'x', this.value)">
-                </div>
-                <div class="slider-row">
-                    <span>Y:</span>
-                    <input type="range" id="y${idx}" min="0" max="1350" value="${defY[i]}" oninput="sync(${idx}, 'y', this.value)">
-                    <input type="number" id="ny${idx}" min="0" max="1350" value="${defY[i]}" oninput="sync(${idx}, 'y', this.value)">
-                </div>
-            </div>`;
-        sliderContainer.insertAdjacentHTML('beforeend', html);
-    });
-
     const canvas = document.getElementById('mainCanvas');
     const ctx = canvas.getContext('2d');
     const previewImg = document.getElementById('preview');
 
-    function sync(i, axis, val) {
-        document.getElementById(axis + i).value = val;
-        document.getElementById('n' + axis + i).value = val;
+    function syncX(val) {
+        document.getElementById('roomX').value = val;
+        document.getElementById('numX').value = val;
         update();
     }
 
-    async function drawSticker(data, template) {
+    function drawSticker(data, template) {
         return new Promise((resolve) => {
             const img = new Image();
             img.src = template + "?t=" + new Date().getTime();
@@ -107,20 +96,27 @@
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = "black";
-                ctx.font = "bold 52px sans-serif";
+                ctx.font = "bold 56px sans-serif";
 
-                const getX = (i) => parseInt(document.getElementById('x' + i).value);
-                const getY = (i) => parseInt(document.getElementById('y' + i).value);
+                const rX = parseInt(document.getElementById('roomX').value);
 
-                ctx.fillText(data.unitId, getX(1), getY(1));
-                ctx.fillText(data.room, getX(2), getY(2));
-                ctx.fillText(data.brand, getX(3), getY(3));
-                ctx.fillText(data.type, getX(4), getY(4));
-                
-                let hpTxt = (template.includes("158556")) ? data.cooling + " HP" : data.cooling;
-                ctx.fillText(hpTxt, getX(5), getY(5));
-                ctx.fillText(data.refrigerant, getX(6), getY(6));
-                
+                if (template === "1000158560.png") {
+                    // Outdoor Fixed (ကိုကိုအရင်ပေးထားတဲ့ အမှတ်များ)
+                    ctx.fillText(data.unitId, 566, 106);
+                    ctx.fillText(data.room, rX, 166);
+                    ctx.fillText(data.brand, 566, 223);
+                    ctx.fillText(data.type, 518, 284);
+                    ctx.fillText(data.cooling, 693, 343);
+                    ctx.fillText(data.refrigerant, 627, 401);
+                } else {
+                    // Indoor Fixed (ကိုကို နောက်ဆုံးပို့ထားတဲ့ Screenshot ထဲက အမှတ်များ)
+                    ctx.fillText(data.unitId, 553, 240);
+                    ctx.fillText(data.room, rX, 344);
+                    ctx.fillText(data.brand, 553, 444);
+                    ctx.fillText(data.type, 567, 540);
+                    ctx.fillText(data.cooling, 650, 647);
+                    ctx.fillText(data.refrigerant, 650, 750);
+                }
                 resolve();
             };
         });
@@ -135,8 +131,7 @@
             cooling: document.getElementById('cooling').value, 
             refrigerant: document.getElementById('refrigerant').value
         };
-        const template = document.getElementById('template').value;
-        await drawSticker(data, template);
+        await drawSticker(data, document.getElementById('template').value);
         previewImg.src = canvas.toDataURL('image/jpeg', 0.8);
     }
 
