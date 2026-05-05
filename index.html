@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AC Sticker - Sync Fixed Version</title>
+    <title>AC Sticker - Fix Preview Sync</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         body { font-family: sans-serif; padding: 10px; background: #1a1a1a; color: white; text-align: center; }
-        .container { max-width: 900px; margin: auto; display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; }
+        .container { max-width: 950px; margin: auto; display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; }
         .controls { flex: 1.2; min-width: 350px; background: #2d2d2d; padding: 15px; border-radius: 12px; text-align: left; height: 95vh; overflow-y: auto; }
         .preview-side { flex: 0.8; min-width: 300px; position: sticky; top: 10px; }
         .section { background: #333; padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #444; }
@@ -31,18 +31,18 @@
 <div class="container">
     <div class="controls">
         <div class="section">
-            <h3>၁။ ဒေတာထည့်ရန်</h3>
+            <h3>၁။ အခြေခံအချက်အလက်</h3>
             <select id="template" onchange="update()">
                 <option value="1000158560.png">Outdoor Unit</option>
                 <option value="1000158556.png" selected>Indoor Unit</option>
             </select>
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px;">
-                <input type="text" id="unitId" value="CU-G-01">
-                <input type="text" id="room" value="M&E Room">
-                <input type="text" id="brand" value="SUMMIT">
-                <input type="text" id="type" value="Wall">
-                <input type="text" id="cooling" value="2">
-                <input type="text" id="refrigerant" value="R-32a">
+                <input type="text" id="unitId" value="CU-G-01" oninput="update()">
+                <input type="text" id="room" value="M&E Room" oninput="update()">
+                <input type="text" id="brand" value="SUMMIT" oninput="update()">
+                <input type="text" id="type" value="Wall" oninput="update()">
+                <input type="text" id="cooling" value="2" oninput="update()">
+                <input type="text" id="refrigerant" value="R-32a" oninput="update()">
             </div>
         </div>
 
@@ -93,14 +93,13 @@
     const ctx = canvas.getContext('2d');
     const previewImg = document.getElementById('preview');
 
-    // Sync Function: Slider ပြောင်းရင် Number ပြောင်း၊ Number ပြောင်းရင် Slider ပြောင်းရန်
     function sync(i, axis, val) {
         document.getElementById(axis + i).value = val;
         document.getElementById('n' + axis + i).value = val;
         update();
     }
 
-    function drawSticker(data, template) {
+    async function drawSticker(data, template) {
         return new Promise((resolve) => {
             const img = new Image();
             img.src = template + "?t=" + new Date().getTime();
@@ -136,9 +135,8 @@
             cooling: document.getElementById('cooling').value, 
             refrigerant: document.getElementById('refrigerant').value
         };
-        await drawSticker(document.getElementById('template').value, document.getElementById('template').value);
-        // မှတ်ချက်: template အမည်ကို data အဖြစ် ပို့လိုက်ခြင်းအား ပြင်ဆင်ရန်
-        await drawSticker(data, document.getElementById('template').value);
+        const template = document.getElementById('template').value;
+        await drawSticker(data, template);
         previewImg.src = canvas.toDataURL('image/jpeg', 0.8);
     }
 
@@ -168,11 +166,6 @@
         link.href = URL.createObjectURL(content);
         link.download = "Bulk_Stickers.zip";
         link.click();
-    });
-
-    // Input တိုင်းအတွက် Event Listener ထည့်ခြင်း
-    document.querySelectorAll('input, select').forEach(el => {
-        el.addEventListener('input', update);
     });
 
     window.onload = update;
