@@ -27,7 +27,7 @@
 
     <div class="section">
         <h3>၁။ အများကြီး တစ်ခါတည်း ထုတ်ရန် (Bulk)</h3>
-        <label>CSV ဖိုင် ရွေးပါ:</label>
+        <label>CSV ဖိုင် ရွေးပေးပါ ကိုကို:</label>
         <input type="file" id="csvInput" accept="*/*">
         <button id="bulkBtn" class="btn-bulk">စတစ်ကာများအားလုံး (ZIP) ထုတ်မည်</button>
         <div id="status"></div>
@@ -37,8 +37,8 @@
         <h3>၂။ တစ်ပုံချင်းစီ စိတ်ကြိုက်ထုတ်ရန် (Manual)</h3>
         <label>Unit Type:</label>
         <select id="template">
-            <option value="1000158560.png" selected>Outdoor Unit (Uses Column B)</option>
-            <option value="1000158556.png">Indoor Unit (Uses Column A)</option>
+            <option value="1000158560.png" selected>Outdoor Unit</option>
+            <option value="1000158556.png">Indoor Unit</option>
         </select>
         
         <label>Unit ID:</label>
@@ -79,7 +79,6 @@
     const bulkBtn = document.getElementById('bulkBtn');
     const statusDiv = document.getElementById('status');
 
-    // Drawing Logic (ကိုကို့ရဲ့ စိတ်ကြိုက် Alignment များအတိုင်း)
     function drawSticker(data, selectedTemplate) {
         return new Promise((resolve) => {
             const img = new Image();
@@ -91,7 +90,6 @@
                 ctx.font = "bold 56px sans-serif";
 
                 if (selectedTemplate === "1000158560.png") {
-                    // Outdoor Alignment
                     const xStart = 465; const xMid = 630;
                     ctx.fillText(data.unitId, xStart, 128);
                     ctx.fillText(data.room, xStart, 196);
@@ -100,7 +98,6 @@
                     ctx.fillText(data.cooling, xMid + 50, 425);
                     ctx.fillText(data.refrigerant, xMid + 30, 493);
                 } else {
-                    // Indoor Alignment
                     const xLeft = 465; const xRight = 720;
                     ctx.fillText(data.unitId, xLeft, 125);
                     ctx.fillText(data.room, xLeft, 235);
@@ -114,7 +111,6 @@
         });
     }
 
-    // Manual Preview Update
     async function updatePreview() {
         const data = {
             unitId: document.getElementById('unitId').value,
@@ -128,7 +124,6 @@
         previewImg.src = canvas.toDataURL('image/jpeg', 0.8);
     }
 
-    // Single Download
     function downloadSingle() {
         const link = document.createElement('a');
         link.download = (document.getElementById('unitId').value || 'Sticker') + '.jpg';
@@ -136,7 +131,7 @@
         link.click();
     }
 
-    // Bulk Zip Generation
+    // Bulk Zip Generation (ကိုကို့ရဲ့ CSV အသစ် Column A ကနေ စဖတ်ဖို့ ပြင်ထားပါတယ်)
     bulkBtn.addEventListener('click', async () => {
         const file = document.getElementById('csvInput').files[0];
         if (!file) { alert("ကိုကို... CSV ဖိုင်အရင်ရွေးပေးပါရှင်"); return; }
@@ -146,7 +141,7 @@
         
         try {
             const text = await file.text();
-            const lines = text.split(/\r?\n/);
+            const lines = text.split(/\r?\n/).filter(line => line.trim() !== "");
             const zip = new JSZip();
             const selectedTemplate = templateSelect.value;
 
@@ -154,27 +149,30 @@
                 const cols = lines[i].split(',');
                 if (cols.length < 5) continue;
 
+                // S/N မပါသောကြောင့် Column Index များကို 0 မှ စတွက်ပါသည်
                 const data = {
-                    unitId: (selectedTemplate === "1000158560.png") ? cols[1]?.trim() : cols[0]?.trim(),
-                    room: cols[2]?.trim() || "",
-                    brand: cols[3]?.trim() || "",
-                    type: cols[4]?.trim() || "",
-                    cooling: cols[5]?.trim() || "",
-                    refrigerant: cols[6]?.trim() || ""
+                    unitId: cols[0]?.trim() || "",    // Column A
+                    room: cols[1]?.trim() || "",      // Column B
+                    brand: cols[2]?.trim() || "",     // Column C
+                    type: cols[3]?.trim() || "",      // Column D
+                    cooling: cols[4]?.trim() || "",   // Column E
+                    refrigerant: cols[5]?.trim() || "" // Column F
                 };
 
                 await drawSticker(data, selectedTemplate);
-                const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', 0.9));
-                zip.file(data.unitId.replace(/[/\\?%*:|"<>]/g, '-') + ".jpg", blob);
-                statusDiv.innerText = `${i} / ${lines.length - 1} ပုံ ပြီးပါပြီ...`;
+                const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', 0.95));
+                const safeFileName = data.unitId.replace(/[/\\?%*:|"<>]/g, '-') + ".jpg";
+                zip.file(safeFileName, blob);
+                statusDiv.innerText = `${i} / ${lines.length - 1} ပုံ ပြီးပါပြီ ကိုကို...`;
             }
 
             const content = await zip.generateAsync({type: "blob"});
             const link = document.createElement('a');
             link.href = URL.createObjectURL(content);
-            link.download = (selectedTemplate === "1000158560.png" ? "Outdoor_Stickers.zip" : "Indoor_Stickers.zip");
+            const zipName = (selectedTemplate.includes("1000158560.png") ? "Outdoor_Stickers.zip" : "Indoor_Stickers.zip");
+            link.download = zipName;
             link.click();
-            statusDiv.innerText = "အားလုံးပြီးပါပြီ ကိုကို!";
+            statusDiv.innerText = "အောင်မြင်စွာ ထုတ်ပြီးပါပြီ ကိုကို!";
         } catch (e) {
             statusDiv.innerText = "Error: CSV ဖိုင်ကို စစ်ဆေးပေးပါ";
         }
@@ -182,7 +180,6 @@
         updatePreview();
     });
 
-    // Listen to manual changes
     document.querySelectorAll('input, select').forEach(el => el.oninput = updatePreview);
     window.onload = updatePreview;
 </script>
