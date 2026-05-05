@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AC Sticker - Ultimate Alignment Fix</title>
+    <title>AC Sticker - Sync Fixed Version</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         body { font-family: sans-serif; padding: 10px; background: #1a1a1a; color: white; text-align: center; }
@@ -17,8 +17,8 @@
         .slider-group { background: #444; padding: 8px; border-radius: 6px; margin-bottom: 8px; }
         .slider-row { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
         .slider-row span { font-size: 10px; width: 45px; color: #4caf50; font-weight: bold; }
-        input[type="range"] { flex: 1; }
-        input[type="number"] { width: 60px; text-align: center; border-radius: 4px; border: none; font-size: 12px; padding: 3px; }
+        input[type="range"] { flex: 1; cursor: pointer; }
+        input[type="number"] { width: 70px; text-align: center; border-radius: 4px; border: 1px solid #555; font-size: 13px; padding: 5px; background: #fff; color: #000; }
         button { width: 100%; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; margin-top: 5px; }
         .btn-dl { background: #28a745; color: white; }
         .btn-zip { background: #1a73e8; color: white; margin-top: 10px; }
@@ -46,30 +46,8 @@
             </div>
         </div>
 
-        <h3>၂။ တစ်ကြောင်းချင်းစီ နေရာချိန်ရန် (X & Y)</h3>
-        <script>
-            const fields = ["Unit ID", "Room", "Brand", "Type", "Capacity", "Gas"];
-            // Indoor အတွက် အနီးစပ်ဆုံး Default Coordinates များ
-            const defX = [415, 415, 415, 415, 650, 650];
-            const defY = [140, 215, 290, 365, 435, 510];
-
-            fields.forEach((name, i) => {
-                document.write(`
-                <div class="slider-group">
-                    <label>${name}</label>
-                    <div class="slider-row">
-                        <span>X: <b id="vx${i+1}">${defX[i]}</b></span>
-                        <input type="range" id="x${i+1}" min="0" max="1000" value="${defX[i]}" oninput="sync(${i+1}, 'x', this.value)">
-                        <input type="number" id="nx${i+1}" value="${defX[i]}" oninput="sync(${i+1}, 'x', this.value)">
-                    </div>
-                    <div class="slider-row">
-                        <span>Y: <b id="vy${i+1}">${defY[i]}</b></span>
-                        <input type="range" id="y${i+1}" min="0" max="1000" value="${defY[i]}" oninput="sync(${i+1}, 'y', this.value)">
-                        <input type="number" id="ny${i+1}" value="${defY[i]}" oninput="sync(${i+1}, 'y', this.value)">
-                    </div>
-                </div>`);
-            });
-        </script>
+        <h3>၂။ X & Y နေရာညှိရန်</h3>
+        <div id="sliderContainer"></div>
     </div>
 
     <div class="preview-side">
@@ -87,14 +65,38 @@
 <canvas id="mainCanvas" width="1080" height="1350"></canvas>
 
 <script>
+    const fields = ["Unit ID", "Room", "Brand", "Type", "Capacity", "Gas"];
+    const defX = [415, 415, 415, 415, 650, 650];
+    const defY = [140, 215, 290, 365, 435, 510];
+
+    const sliderContainer = document.getElementById('sliderContainer');
+    fields.forEach((name, i) => {
+        const idx = i + 1;
+        const html = `
+            <div class="slider-group">
+                <label>${name}</label>
+                <div class="slider-row">
+                    <span>X:</span>
+                    <input type="range" id="x${idx}" min="0" max="1080" value="${defX[i]}" oninput="sync(${idx}, 'x', this.value)">
+                    <input type="number" id="nx${idx}" min="0" max="1080" value="${defX[i]}" oninput="sync(${idx}, 'x', this.value)">
+                </div>
+                <div class="slider-row">
+                    <span>Y:</span>
+                    <input type="range" id="y${idx}" min="0" max="1350" value="${defY[i]}" oninput="sync(${idx}, 'y', this.value)">
+                    <input type="number" id="ny${idx}" min="0" max="1350" value="${defY[i]}" oninput="sync(${idx}, 'y', this.value)">
+                </div>
+            </div>`;
+        sliderContainer.insertAdjacentHTML('beforeend', html);
+    });
+
     const canvas = document.getElementById('mainCanvas');
     const ctx = canvas.getContext('2d');
     const previewImg = document.getElementById('preview');
 
+    // Sync Function: Slider ပြောင်းရင် Number ပြောင်း၊ Number ပြောင်းရင် Slider ပြောင်းရန်
     function sync(i, axis, val) {
         document.getElementById(axis + i).value = val;
         document.getElementById('n' + axis + i).value = val;
-        document.getElementById('v' + axis + i).innerText = val;
         update();
     }
 
@@ -108,8 +110,8 @@
                 ctx.fillStyle = "black";
                 ctx.font = "bold 52px sans-serif";
 
-                const getX = (i) => document.getElementById('x' + i).value;
-                const getY = (i) => document.getElementById('y' + i).value;
+                const getX = (i) => parseInt(document.getElementById('x' + i).value);
+                const getY = (i) => parseInt(document.getElementById('y' + i).value);
 
                 ctx.fillText(data.unitId, getX(1), getY(1));
                 ctx.fillText(data.room, getX(2), getY(2));
@@ -127,10 +129,15 @@
 
     async function update() {
         const data = {
-            unitId: document.getElementById('unitId').value, room: document.getElementById('room').value,
-            brand: document.getElementById('brand').value, type: document.getElementById('type').value,
-            cooling: document.getElementById('cooling').value, refrigerant: document.getElementById('refrigerant').value
+            unitId: document.getElementById('unitId').value, 
+            room: document.getElementById('room').value,
+            brand: document.getElementById('brand').value, 
+            type: document.getElementById('type').value,
+            cooling: document.getElementById('cooling').value, 
+            refrigerant: document.getElementById('refrigerant').value
         };
+        await drawSticker(document.getElementById('template').value, document.getElementById('template').value);
+        // မှတ်ချက်: template အမည်ကို data အဖြစ် ပို့လိုက်ခြင်းအား ပြင်ဆင်ရန်
         await drawSticker(data, document.getElementById('template').value);
         previewImg.src = canvas.toDataURL('image/jpeg', 0.8);
     }
@@ -154,7 +161,7 @@
             const data = { unitId: c[0], room: c[1], brand: c[2], type: c[3], cooling: c[4], refrigerant: c[5] };
             await drawSticker(data, document.getElementById('template').value);
             const b = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.95));
-            zip.file(data.unitId + ".jpg", b);
+            zip.file(data.unitId.replace(/[/\\?%*:|"<>]/g, '-') + ".jpg", b);
         }
         const content = await zip.generateAsync({type:"blob"});
         const link = document.createElement('a');
@@ -163,7 +170,11 @@
         link.click();
     });
 
-    document.querySelectorAll('input, select').forEach(el => el.oninput = update);
+    // Input တိုင်းအတွက် Event Listener ထည့်ခြင်း
+    document.querySelectorAll('input, select').forEach(el => {
+        el.addEventListener('input', update);
+    });
+
     window.onload = update;
 </script>
 </body>
