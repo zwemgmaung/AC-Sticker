@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AC Sticker - Final Precision Fix</title>
+    <title>AC Sticker - Final No-Line Version</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         body { font-family: sans-serif; padding: 10px; background: #1a1a1a; color: white; text-align: center; }
@@ -20,7 +20,7 @@
         .room-ctrl { background: #444; padding: 10px; border-radius: 8px; margin-bottom: 15px; }
         .slider-row { display: flex; align-items: center; gap: 10px; }
         input[type="range"] { flex: 1; }
-        input[type="number"] { width: 70px; text-align: center; margin: 0; }
+        input[type="number"] { width: 75px; text-align: center; margin: 0; }
 
         button { color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
         .btn-zip { background: #1a73e8; margin-bottom: 10px; }
@@ -55,7 +55,7 @@
         <div class="room-ctrl">
             <label style="color:#4caf50;">Room စာသား ဘယ်/ညာ ညှိရန် (X)</label>
             <div class="slider-row">
-                <input type="range" id="roomX" min="350" max="650" value="415" oninput="syncX(this.value)">
+                <input type="range" id="roomX" min="350" max="750" value="415" oninput="syncX(this.value)">
                 <input type="number" id="numX" value="415" oninput="syncX(this.value)">
             </div>
         </div>
@@ -95,33 +95,27 @@
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = "black";
                 ctx.font = "bold 56px sans-serif";
-                ctx.lineWidth = 4;
 
                 const rX = parseInt(document.getElementById('roomX').value);
-                const lineE = 960;
-                const fixedX = 415; // Indoor အတွက် အသေထားသော X
+                const fixedX = 415; // Indoor & Outdoor Brand Start
 
                 if (template === "1000158560.png") {
-                    // Outdoor Fixed (Room တစ်ခုတည်း Slider သုံး)
+                    // Outdoor Unit
                     ctx.fillText(data.unitId, 566, 106);
-                    ctx.fillText(data.room, rX, 166); // Slider ကူညီပေးသော Room
-                    ctx.fillText(data.brand, fixedX, 223); // Brand အသေ 415
+                    ctx.fillText(data.room, rX, 166);
+                    ctx.fillText(data.brand, 566, 223); // Brand ကို Unit ID အမှတ်အတိုင်း (566) ထားရှိခြင်း
                     ctx.fillText(data.type, 518, 284);
                     ctx.fillText(data.cooling, 693, 343);
                     ctx.fillText(data.refrigerant, 627, 401);
                 } else {
-                    // Indoor Alignment
+                    // Indoor Unit (No Lines)
                     ctx.fillText(data.unitId, fixedX, 130);
-                    ctx.fillText(data.room, rX, 235); // Slider ကူညီပေးသော Room
-                    ctx.fillText(":", 400, 345);
-                    ctx.fillText(data.brand, fixedX, 345); // Brand အသေ 415
+                    ctx.fillText(data.room, rX, 235);
+                    // ကိုကို ပို့ပေးထားတဲ့ပုံမှာ : ပါပြီးသားမို့ : နေရာကို ကျော်ရေးထားပါတယ်
+                    ctx.fillText(data.brand, fixedX, 345); 
                     ctx.fillText(data.type, fixedX, 455);
                     ctx.fillText(data.cooling + " HP", 720, 560);
                     ctx.fillText(data.refrigerant, 720, 675);
-
-                    // မျဉ်းကြောင်းများ (: ရဲ့နောက် X=410 ကနေ စဆွဲပါသည်)
-                    const dL = (y) => { ctx.beginPath(); ctx.moveTo(410, y+12); ctx.lineTo(lineE, y+12); ctx.stroke(); };
-                    dL(130); dL(235); dL(345); dL(455); dL(560); dL(675);
                 }
                 resolve();
             };
@@ -157,7 +151,7 @@
             const data = { unitId: c[0], room: c[1], brand: c[2], type: c[3], cooling: c[4], refrigerant: c[5] };
             await drawSticker(data, document.getElementById('template').value);
             const b = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.95));
-            zip.file(data.unitId + ".jpg", b);
+            zip.file(data.unitId.replace(/[/\\?%*:|"<>]/g, '-') + ".jpg", b);
         }
         const content = await zip.generateAsync({type:"blob"});
         const link = document.createElement('a');
@@ -171,4 +165,3 @@
 </script>
 </body>
 </html>
-
