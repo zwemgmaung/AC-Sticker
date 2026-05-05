@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AC Sticker - Template Update Fix</title>
+    <title>AC Sticker - Precision Alignment</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         body { font-family: sans-serif; padding: 15px; background: #1a1a1a; text-align: center; color: white; }
@@ -23,13 +23,13 @@
 <body>
 
 <div class="container">
-    <h2 style="color: #4caf50; margin-bottom: 20px;">AC Sticker Master App</h2>
+    <h2 style="color: #4caf50; margin-bottom: 20px;">CITY SCHOOL Bulk App</h2>
 
     <div class="section">
         <h3>၁။ အများကြီး တစ်ခါတည်း ထုတ်ရန် (Bulk)</h3>
         <label>CSV ဖိုင် ရွေးပေးပါ ကိုကို:</label>
         <input type="file" id="csvInput" accept="*/*">
-        <button id="bulkBtn" class="btn-bulk">စတစ်ကာများအားလုံး (ZIP) ထုတ်မည်</button>
+        <button id="bulkBtn" class="btn-bulk">စတစ်ကာအားလုံး (ZIP) ထုတ်မည်</button>
         <div id="status"></div>
     </div>
 
@@ -43,16 +43,10 @@
         
         <label>Unit ID:</label><input type="text" id="unitId" value="CU G-01">
         <label>Room:</label><input type="text" id="room" value="M & E Control Room">
-        <label>Brand:</label><input type="text" id="brand" value="Summit">
+        <label>Brand:</label><input type="text" id="brand" value="SUMMIT">
         <label>Type:</label><input type="text" id="type" value="Wall-Mounted">
         <label>HP:</label><input type="text" id="cooling" value="2">
         <label>Gas:</label><input type="text" id="refrigerant" value="R-32a">
-        <label>Pressure / Ampere / Watt:</label>
-        <div style="display:flex; gap:5px;">
-            <input type="text" id="pressure" value="120" placeholder="psi">
-            <input type="text" id="ampere" value="8.5" placeholder="A">
-            <input type="text" id="watt" value="1800" placeholder="W">
-        </div>
 
         <button onclick="downloadSingle()" class="btn-single">လက်ရှိပုံကို ဒေါင်းလုဒ်ဆွဲမည်</button>
     </div>
@@ -79,38 +73,47 @@
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = "black";
                 ctx.font = "bold 52px sans-serif";
+                ctx.lineWidth = 3;
 
-                // ပုံစံသစ် (Running Data ပါသောပုံ) အတွက် နေရာချထားမှုများ
-                const xLeft = 475; 
-                const xRight = 720;
-                const xCol2 = 630; // Pressure/Ampere နေရာများအတွက်
+                // X အမှတ်များကို ပုံအသစ်၏ မျဉ်းကြောင်းအစများနှင့် ချိန်ညှိထားပါသည်
+                const xLeft = 480; 
+                const xHP = 400; // Capacity (HP) မျဉ်းအစ
+                const xGas = 650; // Refrigerant (Gas) မျဉ်းအစ
+                const lineEnd = 960;
 
                 if (selectedTemplate === "1000158560.png") {
-                    // Outdoor Alignment (New Template)
+                    // Outdoor Alignment
                     ctx.fillText(data.unitId, xLeft, 130);
                     ctx.fillText(data.room, xLeft, 195);
                     ctx.fillText(data.brand, xLeft, 260);
                     ctx.fillText(data.type, xLeft, 325);
-                    ctx.fillText(data.cooling, xLeft, 390);
-                    ctx.fillText(data.refrigerant, xRight, 390);
                     
-                    // Running Data (အောက်က မျဉ်းကြောင်း ၃ ကြောင်းပေါ်)
-                    ctx.fillText(data.pressure || "", xLeft, 455);
-                    ctx.fillText(data.ampere || "", xLeft, 520);
-                    ctx.fillText(data.watt || "", xLeft, 585);
+                    // HP နှင့် Gas ကို သက်ဆိုင်ရာ မျဉ်းကြောင်းပေါ် တင်ခြင်း
+                    ctx.fillText(data.cooling, xHP + 10, 395);
+                    ctx.fillText(data.refrigerant, xGas + 10, 395);
+
+                    // Running Pressure (Y=460) နှင့် Ampere (Y=525) အတွက် မျဉ်းကြောင်းများသာ ဆွဲထားပါမည် (Softpen ဖြင့် ရေးရန်)
+                    const drawUnderline = (x, y, end) => {
+                        ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(end, y); ctx.stroke();
+                    };
+                    drawUnderline(400, 465, 485); // Pressure မျဉ်း
+                    drawUnderline(640, 530, 725); // Ampere မျဉ်း
                 } else {
-                    // Indoor Alignment (New Template)
+                    // Indoor Alignment
                     ctx.fillText(data.unitId, xLeft, 130);
-                    ctx.fillText(data.room, xLeft, 195);
-                    ctx.fillText(":", 395, 260); // Brand ရှေ့က ( : )
-                    ctx.fillText(data.brand, xLeft, 260);
-                    ctx.fillText(data.type, xLeft, 325);
-                    ctx.fillText(data.cooling, xLeft, 390);
-                    ctx.fillText(data.refrigerant, xLeft, 455);
+                    ctx.fillText(data.room, xLeft, 235);
                     
-                    // Indoor တွင် Running Data ထည့်လိုပါက
-                    ctx.fillText(data.pressure || "", xLeft, 520);
-                    ctx.fillText(data.ampere || "", xLeft, 585);
+                    // Brand ရှေ့က ( : ) ကို X=400 နေရာတွင် ချိန်ထားပါသည်
+                    ctx.fillText(":", 400, 345);
+                    ctx.fillText(data.brand, xLeft, 345);
+                    
+                    ctx.fillText(data.type, xLeft, 455);
+                    ctx.fillText(data.cooling + " HP", 720, 560);
+                    ctx.fillText(data.refrigerant, 720, 675);
+
+                    // Indoor Underlines
+                    const drawLine = (x, y) => { ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(lineEnd, y); ctx.stroke(); };
+                    drawLine(xLeft, 142); drawLine(xLeft, 247); drawLine(xLeft, 357); drawLine(xLeft, 467);
                 }
                 resolve();
             };
@@ -124,10 +127,7 @@
             brand: document.getElementById('brand').value,
             type: document.getElementById('type').value,
             cooling: document.getElementById('cooling').value,
-            refrigerant: document.getElementById('refrigerant').value,
-            pressure: document.getElementById('pressure').value,
-            ampere: document.getElementById('ampere').value,
-            watt: document.getElementById('watt').value
+            refrigerant: document.getElementById('refrigerant').value
         };
         await drawSticker(data, templateSelect.value);
         previewImg.src = canvas.toDataURL('image/jpeg', 0.8);
@@ -152,18 +152,19 @@
             if (cols.length < 5) continue;
             const data = {
                 unitId: cols[0]?.trim(), room: cols[1]?.trim(), brand: cols[2]?.trim(),
-                type: cols[3]?.trim(), cooling: cols[4]?.trim(), refrigerant: cols[5]?.trim(),
-                pressure: cols[6]?.trim(), ampere: cols[7]?.trim(), watt: cols[8]?.trim()
+                type: cols[3]?.trim(), cooling: cols[4]?.trim(), refrigerant: cols[5]?.trim()
             };
             await drawSticker(data, templateSelect.value);
             const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', 0.95));
             zip.file(data.unitId.replace(/[/\\?%*:|"<>]/g, '-') + ".jpg", blob);
+            statusDiv.innerText = `${i} / ${lines.length - 1} ပုံ ပြီးပါပြီ ကိုကို...`;
         }
         const content = await zip.generateAsync({type: "blob"});
         const link = document.createElement('a');
         link.href = URL.createObjectURL(content);
-        link.download = "Bulk_Stickers.zip";
+        link.download = (templateSelect.value.includes("1000158560") ? "Outdoor_Stickers.zip" : "Indoor_Stickers.zip");
         link.click();
+        statusDiv.innerText = "အောင်မြင်စွာ ထုတ်ပြီးပါပြီ ကိုကို!";
         bulkBtn.disabled = false;
     });
 
@@ -172,3 +173,4 @@
 </script>
 </body>
 </html>
+
