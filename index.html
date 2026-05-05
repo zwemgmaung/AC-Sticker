@@ -27,6 +27,7 @@
         button { color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
         .btn-zip { background: #1a73e8; margin-bottom: 10px; }
         .btn-dl { background: #28a745; }
+        #status { margin-top: 10px; font-size: 13px; color: #ffeb3b; }
         #preview { width: 100%; border-radius: 8px; border: 2px solid #444; margin-top: 10px; }
         canvas { display: none; }
     </style>
@@ -40,7 +41,7 @@
         <h3>၁။ Bulk (Zip) ထုတ်ရန်</h3>
         <input type="file" id="csvInput" accept="*/*">
         <button id="bulkBtn" class="btn-zip">CSV ဖြင့် ZIP ထုတ်မည်</button>
-        <div id="status" style="font-size:12px; color:#ffeb3b; margin-top:5px;"></div>
+        <div id="status"></div>
     </div>
 
     <div class="section">
@@ -101,7 +102,6 @@
                 const rX = parseInt(document.getElementById('roomX').value);
 
                 if (template === "1000158560.png") {
-                    // Outdoor Fixed (ကိုကိုအရင်ပေးထားတဲ့ အမှတ်များ)
                     ctx.fillText(data.unitId, 566, 106);
                     ctx.fillText(data.room, rX, 166);
                     ctx.fillText(data.brand, 566, 223);
@@ -109,7 +109,6 @@
                     ctx.fillText(data.cooling, 693, 343);
                     ctx.fillText(data.refrigerant, 627, 401);
                 } else {
-                    // Indoor Fixed (ကိုကို နောက်ဆုံးပို့ထားတဲ့ Screenshot ထဲက အမှတ်များ)
                     ctx.fillText(data.unitId, 553, 240);
                     ctx.fillText(data.room, rX, 344);
                     ctx.fillText(data.brand, 553, 444);
@@ -144,7 +143,15 @@
 
     document.getElementById('bulkBtn').addEventListener('click', async () => {
         const file = document.getElementById('csvInput').files[0];
-        if (!file) return;
+        const status = document.getElementById('status');
+        if (!file) {
+            status.innerText = "ကိုကို... CSV ဖိုင်အရင်ရွေးပါရှင်";
+            return;
+        }
+        
+        status.innerText = "စတစ်ကာများ ထုတ်နေပါပြီ... ခဏစောင့်ပါရှင်";
+        document.getElementById('bulkBtn').disabled = true;
+
         const text = await file.text();
         const lines = text.split(/\r?\n/).filter(l => l.trim() !== "");
         const zip = new JSZip();
@@ -155,12 +162,18 @@
             await drawSticker(data, document.getElementById('template').value);
             const b = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.95));
             zip.file(data.unitId.replace(/[/\\?%*:|"<>]/g, '-') + ".jpg", b);
+            
+            // ဘယ်နှစ်ပုံပြီးပြီလဲဆိုတာ ပြတဲ့စာသား
+            status.innerText = `ကိုကို... ${i} / ${lines.length - 1} ပုံ ပြီးပါပြီရှင်`;
         }
         const content = await zip.generateAsync({type:"blob"});
         const link = document.createElement('a');
         link.href = URL.createObjectURL(content);
         link.download = "Bulk_Stickers.zip";
         link.click();
+        
+        status.innerText = "အားလုံးပြီးပါပြီ ကိုကို!";
+        document.getElementById('bulkBtn').disabled = false;
     });
 
     window.onload = update;
