@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AC Sticker - Fixed Coordinates App</title>
+    <title>AC Sticker - Bold & Alignment Fix</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         body { font-family: sans-serif; padding: 10px; background: #1a1a1a; color: white; text-align: center; }
@@ -12,7 +12,6 @@
         h3 { color: #4caf50; font-size: 16px; margin: 0 0 10px 0; border-bottom: 1px solid #555; padding-bottom: 5px; }
         label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 13px; color: #ccc; }
         
-        /* Drop-down arrow ပြန်ပေါ်ရန်နှင့် အဖြူရောင်ဖြစ်ရန် */
         input, select { 
             width: 100%; 
             padding: 12px; 
@@ -23,10 +22,10 @@
             color: #333; 
             box-sizing: border-box; 
             margin-bottom: 12px;
-            appearance: auto; /* Arrow ပြန်ဖော်ပေးခြင်း */
+            appearance: auto;
         }
         
-        button { color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button { color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
         .btn-zip { background: #1a73e8; margin-bottom: 10px; }
         .btn-dl { background: #28a745; }
         #status { margin-top: 10px; font-size: 13px; color: #ffeb3b; }
@@ -56,28 +55,18 @@
         
         <label>Unit ID:</label><input type="text" id="unitId" value="CU-G-01">
         <label>Room:</label><input type="text" id="room" value="M&E Control Room">
-        
         <label>Brand:</label>
         <select id="brand">
             <option selected>SUMMIT</option><option>DAIKIN</option><option>CHIGO</option><option>HISENSE</option><option>SHIMAZU</option>
         </select>
-
         <label>Type:</label>
         <select id="type">
             <option selected>Wall-Mounted</option><option>Ceiling Cassette</option><option>Floor Standing</option>
         </select>
-
         <div style="display:flex; gap:10px;">
-            <div style="flex:1;">
-                <label>HP:</label>
-                <select id="cooling"><option>1</option><option>1.5</option><option selected>2</option><option>3</option><option>5</option></select>
-            </div>
-            <div style="flex:1;">
-                <label>Gas:</label>
-                <select id="refrigerant"><option selected>R-32a</option><option>R-410a</option><option>R-22a</option></select>
-            </div>
+            <div style="flex:1;"><label>HP:</label><select id="cooling"><option>1</option><option>1.5</option><option selected>2</option><option>3</option><option>5</option></select></div>
+            <div style="flex:1;"><label>Gas:</label><select id="refrigerant"><option selected>R-32a</option><option>R-410a</option><option>R-22a</option></select></div>
         </div>
-
         <button onclick="downloadSingle()" class="btn-dl">လက်ရှိပုံကို သိမ်းမည်</button>
     </div>
 
@@ -99,26 +88,41 @@
             img.onload = function() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                
+                // စာသားအားလုံးကို Bold (အထူ) ဖြစ်အောင် သတ်မှတ်ခြင်း
                 ctx.fillStyle = "black";
-                ctx.font = "bold 52px sans-serif";
+                ctx.font = "bold 56px sans-serif";
+                ctx.lineWidth = 3;
 
                 if (template === "1000158560.png") {
-                    // ကိုကိုပေးထားတဲ့ Outdoor Fixed အမှတ်များ
-                    ctx.fillText(data.unitId, 566, 106);      // Unit ID
-                    ctx.fillText(data.room, 526, 166);         // Room
-                    ctx.fillText(data.brand, 565, 223);        // Brand
-                    ctx.fillText(data.type, 518, 284);         // Type
-                    ctx.fillText(data.cooling, 693, 343);      // HP
-                    ctx.fillText(data.refrigerant, 627, 401);  // Gas
+                    // Outdoor Fixed Coordinates
+                    ctx.fillText(data.unitId, 566, 106);
+                    ctx.fillText(data.room, 526, 166);
+                    ctx.fillText(data.brand, 565, 223);
+                    ctx.fillText(data.type, 518, 284);
+                    ctx.fillText(data.cooling, 693, 343);
+                    ctx.fillText(data.refrigerant, 627, 401);
                 } else {
-                    // Indoor Alignment (မူရင်းအတိုင်း)
-                    ctx.fillText(data.unitId, 480, 130);
-                    ctx.fillText(data.room, 480, 235);
-                    ctx.fillText(":", 400, 345);
-                    ctx.fillText(data.brand, 480, 345);
-                    ctx.fillText(data.type, 480, 455);
+                    // Indoor Alignment & Lines
+                    const xL = 480; const xCol = 400; const lineE = 960;
+                    
+                    ctx.fillText(data.unitId, xL, 130);
+                    ctx.fillText(data.room, xL, 235);
+                    
+                    // Colon ( : ) ကို အပေါ်စာကြောင်းများနှင့် တစ်တန်းတည်းဖြစ်အောင် ချိန်ညှိခြင်း
+                    ctx.fillText(":", xCol, 345);
+                    ctx.fillText(data.brand, xL, 345);
+                    
+                    ctx.fillText(data.type, xL, 455);
                     ctx.fillText(data.cooling + " HP", 720, 560);
                     ctx.fillText(data.refrigerant, 720, 675);
+
+                    // မျဉ်းကြောင်းများ ပြန်ဆွဲခြင်း
+                    const dL = (y) => { ctx.beginPath(); ctx.moveTo(xL, y); ctx.lineTo(lineE, y); ctx.stroke(); };
+                    dL(142); dL(247); dL(357); dL(467);
+                    // HP နဲ့ Gas အောက်က မျဉ်းတိုလေးများ
+                    ctx.beginPath(); ctx.moveTo(720, 572); ctx.lineTo(lineE, 572); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(720, 687); ctx.lineTo(lineE, 687); ctx.stroke();
                 }
                 resolve();
             };
@@ -151,24 +155,19 @@
         const text = await file.text();
         const lines = text.split(/\r?\n/).filter(l => l.trim() !== "");
         const zip = new JSZip();
-        const template = templateSelect.value;
-        const status = document.getElementById('status');
-
         for (let i = 1; i < lines.length; i++) {
             const c = lines[i].split(',');
             if (c.length < 5) continue;
             const data = { unitId: c[0], room: c[1], brand: c[2], type: c[3], cooling: c[4], refrigerant: c[5] };
-            await drawSticker(data, template);
+            await drawSticker(data, templateSelect.value);
             const b = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.95));
             zip.file(data.unitId.replace(/[/\\?%*:|"<>]/g, '-') + ".jpg", b);
-            status.innerText = `${i} / ${lines.length - 1} ပြီးပါပြီ...`;
         }
         const content = await zip.generateAsync({type:"blob"});
         const link = document.createElement('a');
         link.href = URL.createObjectURL(content);
-        link.download = (template.includes("1000158560") ? "Outdoor_Stickers.zip" : "Indoor_Stickers.zip");
+        link.download = "Bulk_Stickers.zip";
         link.click();
-        status.innerText = "အားလုံးပြီးပါပြီ ကိုကို!";
     });
 
     document.querySelectorAll('input, select').forEach(el => el.oninput = update);
