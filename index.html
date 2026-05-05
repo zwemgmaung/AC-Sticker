@@ -3,98 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AC Sticker - Precision Drop-down Fix</title>
+    <title>AC Sticker - Full Precision Control</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
-        body { font-family: sans-serif; padding: 15px; background: #1a1a1a; text-align: center; color: white; }
-        .container { max-width: 550px; margin: auto; background: #2d2d2d; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        .section { text-align: left; margin-bottom: 20px; padding: 15px; border: 1px solid #444; border-radius: 10px; background: #333; }
-        h3 { color: #4caf50; margin-top: 0; border-bottom: 1px solid #555; padding-bottom: 5px; font-size: 16px; }
-        label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 13px; color: #ccc; }
-        
-        /* Drop-down arrow ပြန်ပေါ်ရန်အတွက် Select box ဒီဇိုင်း */
-        input, select { 
-            width: 100%; 
-            padding: 12px; 
-            border: 1px solid #ccc; 
-            border-radius: 8px; 
-            font-size: 15px; 
-            background: #ffffff; 
-            color: #333; 
-            box-sizing: border-box; 
-            margin-bottom: 12px;
-            appearance: auto; /* Arrow ပြန်ပေါ်စေရန် */
-        }
-        
-        button { color: white; border: none; padding: 14px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        body { font-family: sans-serif; padding: 10px; background: #1a1a1a; text-align: center; color: white; }
+        .container { max-width: 600px; margin: auto; background: #2d2d2d; padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .section { text-align: left; margin-bottom: 15px; padding: 12px; border: 1px solid #444; border-radius: 10px; background: #333; }
+        h3 { color: #4caf50; margin-top: 0; font-size: 15px; border-bottom: 1px solid #555; padding-bottom: 5px; }
+        label { display: block; font-weight: bold; margin-bottom: 4px; font-size: 12px; color: #ccc; }
+        input, select { width: 100%; padding: 10px; border-radius: 6px; font-size: 14px; background: #fff; color: #333; box-sizing: border-box; margin-bottom: 10px; appearance: auto; }
+        .control-group { background: #444; padding: 10px; border-radius: 8px; margin-bottom: 10px; }
+        .slider-label { display: flex; justify-content: space-between; font-size: 11px; color: #4caf50; margin-bottom: 2px; }
+        input[type="range"] { width: 100%; margin: 5px 0; }
+        button { color: white; border: none; padding: 14px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
         .btn-bulk { background: #1a73e8; margin-bottom: 10px; }
         .btn-single { background: #28a745; }
-        #status { margin-top: 10px; font-size: 13px; color: #ffeb3b; text-align: center; }
-        #preview { width: 100%; border-radius: 8px; border: 1px solid #444; margin-top: 15px; }
+        #status { margin-top: 10px; font-size: 12px; color: #ffeb3b; }
+        #preview { width: 100%; border-radius: 8px; border: 1px solid #444; margin-top: 10px; }
         canvas { display: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2 style="color: #4caf50; margin-bottom: 20px;">CITY SCHOOL Bulk App</h2>
+    <h2 style="color: #4caf50; margin-top: 0;">CITY SCHOOL Sticker Fix</h2>
 
     <div class="section">
-        <h3>၁။ Bulk ထုတ်ရန် (CSV ဖိုင်ရွေးပါ)</h3>
-        <input type="file" id="csvInput" accept="*/*">
-        <button id="bulkBtn" class="btn-bulk">စတစ်ကာများအားလုံး (ZIP) ထုတ်မည်</button>
-        <div id="status"></div>
-    </div>
-
-    <div class="section">
-        <h3>၂။ တစ်ပုံချင်းစီ စိတ်ကြိုက်ထုတ်ရန် (Manual)</h3>
-        <label>Unit Type:</label>
+        <h3>၁။ ဒေတာထည့်ရန်</h3>
         <select id="template">
             <option value="1000158560.png" selected>Outdoor Unit</option>
             <option value="1000158556.png">Indoor Unit</option>
         </select>
-        
-        <label>Unit ID:</label>
-        <input type="text" id="unitId" value="CU G-01">
-        
-        <label>Room:</label>
-        <input type="text" id="room" value="M & E Control Room">
-        
-        <label>Brand:</label>
-        <select id="brand">
-            <option selected>SUMMIT</option>
-            <option>DAIKIN</option>
-            <option>CHIGO</option>
-            <option>HISENSE</option>
-            <option>SHIMAZU</option>
-        </select>
-
-        <label>Type:</label>
-        <select id="type">
-            <option selected>Wall-Mounted</option>
-            <option>Ceiling Cassette</option>
-            <option>Floor Standing</option>
-        </select>
-
-        <div style="display:flex; gap:10px;">
-            <div style="flex:1;">
-                <label>HP:</label>
-                <select id="cooling">
-                    <option>1</option><option>1.5</option><option selected>2</option>
-                    <option>2.5</option><option>3</option><option>4</option><option>5</option>
-                </select>
-            </div>
-            <div style="flex:1;">
-                <label>Gas:</label>
-                <select id="refrigerant">
-                    <option selected>R-32a</option>
-                    <option>R-410a</option>
-                    <option>R-22a</option>
-                </select>
-            </div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <input type="text" id="unitId" value="CU G-01">
+            <input type="text" id="room" value="Control Room">
+            <input type="text" id="brand" value="SUMMIT">
+            <input type="text" id="type" value="Wall">
+            <input type="text" id="cooling" value="2">
+            <input type="text" id="refrigerant" value="R-32a">
         </div>
+    </div>
 
-        <button onclick="downloadSingle()" class="btn-single">လက်ရှိပုံကို ဒေါင်းလုဒ်ဆွဲမည်</button>
+    <div class="section">
+        <h3>၂။ စာသားအနိမ့်အမြင့် ဘယ်ညာချိန်ရန် (Sliders)</h3>
+        <div class="control-group">
+            <div class="slider-label"><span>ဘယ်/ညာ (X)</span> <span id="valX">480</span></div>
+            <input type="range" id="sliderX" min="300" max="700" value="480">
+            
+            <div class="slider-label"><span>အနိမ့်/အမြင့် (Y)</span> <span id="valY">130</span></div>
+            <input type="range" id="sliderY" min="50" max="800" value="130">
+
+            <div class="slider-label"><span>စာကြောင်းကြားအကွာအဝေး (Gap)</span> <span id="valGap">65</span></div>
+            <input type="range" id="sliderGap" min="40" max="120" value="65">
+        </div>
+        <button onclick="downloadSingle()" class="btn-single">ပုံသိမ်းမည်</button>
+    </div>
+
+    <div class="section">
+        <h3>၃။ Bulk (Zip) ထုတ်ရန်</h3>
+        <input type="file" id="csvInput" accept="*/*">
+        <button id="bulkBtn" class="btn-bulk">ZIP ထုတ်မည်</button>
+        <div id="status"></div>
     </div>
 
     <img id="preview" src="" alt="Preview">
@@ -106,14 +75,20 @@
     const canvas = document.getElementById('mainCanvas');
     const ctx = canvas.getContext('2d');
     const previewImg = document.getElementById('preview');
-    const templateSelect = document.getElementById('template');
-    const bulkBtn = document.getElementById('bulkBtn');
     const statusDiv = document.getElementById('status');
 
-    function drawSticker(data, selectedTemplate) {
+    // Controls
+    const sX = document.getElementById('sliderX');
+    const sY = document.getElementById('sliderY');
+    const sGap = document.getElementById('sliderGap');
+    const vX = document.getElementById('valX');
+    const vY = document.getElementById('valY');
+    const vGap = document.getElementById('valGap');
+
+    function drawSticker(data, template) {
         return new Promise((resolve) => {
             const img = new Image();
-            img.src = selectedTemplate + "?t=" + new Date().getTime();
+            img.src = template + "?t=" + new Date().getTime();
             img.onload = function() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
@@ -121,46 +96,37 @@
                 ctx.font = "bold 52px sans-serif";
                 ctx.lineWidth = 3;
 
-                // X (ဘယ်ညာ) အမှတ်များ - ပုံသစ် Layout နှင့် ညှိထားပါသည်
-                const xLeft = 480; 
-                const xHP = 410; // Capacity (HP) နေရာ
-                const xGas = 660; // Refrigerant (Gas) နေရာ
-                const lineEnd = 960;
+                const x = parseInt(sX.value);
+                const y = parseInt(sY.value);
+                const g = parseInt(sGap.value);
 
-                if (selectedTemplate === "1000158560.png") {
-                    // Outdoor Alignment (Y အနိမ့်အမြင့် ချိန်ညှိချက်)
-                    ctx.fillText(data.unitId, xLeft, 130);
-                    ctx.fillText(data.room, xLeft, 195);
-                    ctx.fillText(data.brand, xLeft, 260);
-                    ctx.fillText(data.type, xLeft, 325);
-                    ctx.fillText(data.cooling, xHP, 395);
-                    ctx.fillText(data.refrigerant, xGas, 395);
-
-                    // Softpen အတွက် မျဉ်းတားခြင်း (Pressure & Ampere)
-                    ctx.beginPath();
-                    ctx.moveTo(410, 465); ctx.lineTo(495, 465); // Pressure Line
-                    ctx.moveTo(650, 530); ctx.lineTo(735, 530); // Ampere Line
-                    ctx.stroke();
+                if (template === "1000158560.png") {
+                    // Outdoor Custom Draw
+                    ctx.fillText(data.unitId, x, y);
+                    ctx.fillText(data.room, x, y + g);
+                    ctx.fillText(data.brand, x, y + (g*2));
+                    ctx.fillText(data.type, x, y + (g*3));
+                    ctx.fillText(data.cooling, 410, y + (g*4) + 5);
+                    ctx.fillText(data.refrigerant, 660, y + (g*4) + 5);
                 } else {
-                    // Indoor Alignment
-                    ctx.fillText(data.unitId, xLeft, 130);
-                    ctx.fillText(data.room, xLeft, 235);
-                    ctx.fillText(":", 400, 345); // Brand ရှေ့က Colon
-                    ctx.fillText(data.brand, xLeft, 345);
-                    ctx.fillText(data.type, xLeft, 455);
-                    ctx.fillText(data.cooling + " HP", 720, 560);
-                    ctx.fillText(data.refrigerant, 720, 675);
-
-                    // Indoor Underlines
-                    const drawL = (y) => { ctx.beginPath(); ctx.moveTo(xLeft, y); ctx.lineTo(lineEnd, y); ctx.stroke(); };
-                    drawL(142); drawL(247); drawL(357); drawL(467);
+                    // Indoor Custom Draw
+                    ctx.fillText(data.unitId, x, y);
+                    ctx.fillText(data.room, x, y + (g*1.6));
+                    ctx.fillText(":", x - 80, y + (g*3.2));
+                    ctx.fillText(data.brand, x, y + (g*3.2));
+                    ctx.fillText(data.type, x, y + (g*4.8));
+                    ctx.fillText(data.cooling + " HP", 720, y + (g*6.4));
+                    ctx.fillText(data.refrigerant, 720, y + (g*8.1));
                 }
                 resolve();
             };
         });
     }
 
-    async function updatePreview() {
+    async function update() {
+        vX.innerText = sX.value;
+        vY.innerText = sY.value;
+        vGap.innerText = sGap.value;
         const data = {
             unitId: document.getElementById('unitId').value,
             room: document.getElementById('room').value,
@@ -169,46 +135,40 @@
             cooling: document.getElementById('cooling').value,
             refrigerant: document.getElementById('refrigerant').value
         };
-        await drawSticker(data, templateSelect.value);
+        await drawSticker(data, document.getElementById('template').value);
         previewImg.src = canvas.toDataURL('image/jpeg', 0.8);
     }
 
     function downloadSingle() {
         const link = document.createElement('a');
-        link.download = (document.getElementById('unitId').value || 'Sticker') + '.jpg';
+        link.download = "Sticker_Fix.jpg";
         link.href = canvas.toDataURL('image/jpeg', 1.0);
         link.click();
     }
 
-    bulkBtn.addEventListener('click', async () => {
+    document.getElementById('bulkBtn').addEventListener('click', async () => {
         const file = document.getElementById('csvInput').files[0];
-        if (!file) { alert("ကိုကို... CSV ဖိုင်အရင်ရွေးပေးပါရှင်"); return; }
-        bulkBtn.disabled = true;
+        if (!file) { alert("ကိုကို... ဖိုင်အရင်ရွေးပါ"); return; }
         const text = await file.text();
-        const lines = text.split(/\r?\n/).filter(line => line.trim() !== "");
+        const lines = text.split(/\r?\n/).filter(l => l.trim() !== "");
         const zip = new JSZip();
         for (let i = 1; i < lines.length; i++) {
-            const cols = lines[i].split(',');
-            if (cols.length < 5) continue;
-            const data = {
-                unitId: cols[0]?.trim(), room: cols[1]?.trim(), brand: cols[2]?.trim(),
-                type: cols[3]?.trim(), cooling: cols[4]?.trim(), refrigerant: cols[5]?.trim()
-            };
-            await drawSticker(data, templateSelect.value);
-            const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', 0.95));
-            zip.file(data.unitId.replace(/[/\\?%*:|"<>]/g, '-') + ".jpg", blob);
+            const c = lines[i].split(',');
+            if (c.length < 5) continue;
+            const data = { unitId: c[0], room: c[1], brand: c[2], type: c[3], cooling: c[4], refrigerant: c[5] };
+            await drawSticker(data, document.getElementById('template').value);
+            const b = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.95));
+            zip.file(data.unitId + ".jpg", b);
         }
-        const content = await zip.generateAsync({type: "blob"});
+        const content = await zip.generateAsync({type:"blob"});
         const link = document.createElement('a');
         link.href = URL.createObjectURL(content);
-        link.download = (templateSelect.value.includes("1000158560") ? "Outdoor_Stickers.zip" : "Indoor_Stickers.zip");
+        link.download = "Bulk_Stickers.zip";
         link.click();
-        statusDiv.innerText = "အားလုံးပြီးပါပြီ ကိုကို!";
-        bulkBtn.disabled = false;
     });
 
-    document.querySelectorAll('input, select').forEach(el => el.oninput = updatePreview);
-    window.onload = updatePreview;
+    document.querySelectorAll('input, select').forEach(el => el.oninput = update);
+    window.onload = update;
 </script>
 </body>
 </html>
