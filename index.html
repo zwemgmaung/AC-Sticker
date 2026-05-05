@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AC Sticker - Precision Alignment</title>
+    <title>AC Sticker - Precision Drop-down Fix</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         body { font-family: sans-serif; padding: 15px; background: #1a1a1a; text-align: center; color: white; }
@@ -11,7 +11,21 @@
         .section { text-align: left; margin-bottom: 20px; padding: 15px; border: 1px solid #444; border-radius: 10px; background: #333; }
         h3 { color: #4caf50; margin-top: 0; border-bottom: 1px solid #555; padding-bottom: 5px; font-size: 16px; }
         label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 13px; color: #ccc; }
-        input, select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; background: #ffffff; color: #333; box-sizing: border-box; margin-bottom: 12px; }
+        
+        /* Drop-down arrow ပြန်ပေါ်ရန်အတွက် Select box ဒီဇိုင်း */
+        input, select { 
+            width: 100%; 
+            padding: 12px; 
+            border: 1px solid #ccc; 
+            border-radius: 8px; 
+            font-size: 15px; 
+            background: #ffffff; 
+            color: #333; 
+            box-sizing: border-box; 
+            margin-bottom: 12px;
+            appearance: auto; /* Arrow ပြန်ပေါ်စေရန် */
+        }
+        
         button { color: white; border: none; padding: 14px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .btn-bulk { background: #1a73e8; margin-bottom: 10px; }
         .btn-single { background: #28a745; }
@@ -26,10 +40,9 @@
     <h2 style="color: #4caf50; margin-bottom: 20px;">CITY SCHOOL Bulk App</h2>
 
     <div class="section">
-        <h3>၁။ အများကြီး တစ်ခါတည်း ထုတ်ရန် (Bulk)</h3>
-        <label>CSV ဖိုင် ရွေးပေးပါ ကိုကို:</label>
+        <h3>၁။ Bulk ထုတ်ရန် (CSV ဖိုင်ရွေးပါ)</h3>
         <input type="file" id="csvInput" accept="*/*">
-        <button id="bulkBtn" class="btn-bulk">စတစ်ကာအားလုံး (ZIP) ထုတ်မည်</button>
+        <button id="bulkBtn" class="btn-bulk">စတစ်ကာများအားလုံး (ZIP) ထုတ်မည်</button>
         <div id="status"></div>
     </div>
 
@@ -41,12 +54,45 @@
             <option value="1000158556.png">Indoor Unit</option>
         </select>
         
-        <label>Unit ID:</label><input type="text" id="unitId" value="CU G-01">
-        <label>Room:</label><input type="text" id="room" value="M & E Control Room">
-        <label>Brand:</label><input type="text" id="brand" value="SUMMIT">
-        <label>Type:</label><input type="text" id="type" value="Wall-Mounted">
-        <label>HP:</label><input type="text" id="cooling" value="2">
-        <label>Gas:</label><input type="text" id="refrigerant" value="R-32a">
+        <label>Unit ID:</label>
+        <input type="text" id="unitId" value="CU G-01">
+        
+        <label>Room:</label>
+        <input type="text" id="room" value="M & E Control Room">
+        
+        <label>Brand:</label>
+        <select id="brand">
+            <option selected>SUMMIT</option>
+            <option>DAIKIN</option>
+            <option>CHIGO</option>
+            <option>HISENSE</option>
+            <option>SHIMAZU</option>
+        </select>
+
+        <label>Type:</label>
+        <select id="type">
+            <option selected>Wall-Mounted</option>
+            <option>Ceiling Cassette</option>
+            <option>Floor Standing</option>
+        </select>
+
+        <div style="display:flex; gap:10px;">
+            <div style="flex:1;">
+                <label>HP:</label>
+                <select id="cooling">
+                    <option>1</option><option>1.5</option><option selected>2</option>
+                    <option>2.5</option><option>3</option><option>4</option><option>5</option>
+                </select>
+            </div>
+            <div style="flex:1;">
+                <label>Gas:</label>
+                <select id="refrigerant">
+                    <option selected>R-32a</option>
+                    <option>R-410a</option>
+                    <option>R-22a</option>
+                </select>
+            </div>
+        </div>
 
         <button onclick="downloadSingle()" class="btn-single">လက်ရှိပုံကို ဒေါင်းလုဒ်ဆွဲမည်</button>
     </div>
@@ -75,45 +121,39 @@
                 ctx.font = "bold 52px sans-serif";
                 ctx.lineWidth = 3;
 
-                // X အမှတ်များကို ပုံအသစ်၏ မျဉ်းကြောင်းအစများနှင့် ချိန်ညှိထားပါသည်
+                // X (ဘယ်ညာ) အမှတ်များ - ပုံသစ် Layout နှင့် ညှိထားပါသည်
                 const xLeft = 480; 
-                const xHP = 400; // Capacity (HP) မျဉ်းအစ
-                const xGas = 650; // Refrigerant (Gas) မျဉ်းအစ
+                const xHP = 410; // Capacity (HP) နေရာ
+                const xGas = 660; // Refrigerant (Gas) နေရာ
                 const lineEnd = 960;
 
                 if (selectedTemplate === "1000158560.png") {
-                    // Outdoor Alignment
+                    // Outdoor Alignment (Y အနိမ့်အမြင့် ချိန်ညှိချက်)
                     ctx.fillText(data.unitId, xLeft, 130);
                     ctx.fillText(data.room, xLeft, 195);
                     ctx.fillText(data.brand, xLeft, 260);
                     ctx.fillText(data.type, xLeft, 325);
-                    
-                    // HP နှင့် Gas ကို သက်ဆိုင်ရာ မျဉ်းကြောင်းပေါ် တင်ခြင်း
-                    ctx.fillText(data.cooling, xHP + 10, 395);
-                    ctx.fillText(data.refrigerant, xGas + 10, 395);
+                    ctx.fillText(data.cooling, xHP, 395);
+                    ctx.fillText(data.refrigerant, xGas, 395);
 
-                    // Running Pressure (Y=460) နှင့် Ampere (Y=525) အတွက် မျဉ်းကြောင်းများသာ ဆွဲထားပါမည် (Softpen ဖြင့် ရေးရန်)
-                    const drawUnderline = (x, y, end) => {
-                        ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(end, y); ctx.stroke();
-                    };
-                    drawUnderline(400, 465, 485); // Pressure မျဉ်း
-                    drawUnderline(640, 530, 725); // Ampere မျဉ်း
+                    // Softpen အတွက် မျဉ်းတားခြင်း (Pressure & Ampere)
+                    ctx.beginPath();
+                    ctx.moveTo(410, 465); ctx.lineTo(495, 465); // Pressure Line
+                    ctx.moveTo(650, 530); ctx.lineTo(735, 530); // Ampere Line
+                    ctx.stroke();
                 } else {
                     // Indoor Alignment
                     ctx.fillText(data.unitId, xLeft, 130);
                     ctx.fillText(data.room, xLeft, 235);
-                    
-                    // Brand ရှေ့က ( : ) ကို X=400 နေရာတွင် ချိန်ထားပါသည်
-                    ctx.fillText(":", 400, 345);
+                    ctx.fillText(":", 400, 345); // Brand ရှေ့က Colon
                     ctx.fillText(data.brand, xLeft, 345);
-                    
                     ctx.fillText(data.type, xLeft, 455);
                     ctx.fillText(data.cooling + " HP", 720, 560);
                     ctx.fillText(data.refrigerant, 720, 675);
 
                     // Indoor Underlines
-                    const drawLine = (x, y) => { ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(lineEnd, y); ctx.stroke(); };
-                    drawLine(xLeft, 142); drawLine(xLeft, 247); drawLine(xLeft, 357); drawLine(xLeft, 467);
+                    const drawL = (y) => { ctx.beginPath(); ctx.moveTo(xLeft, y); ctx.lineTo(lineEnd, y); ctx.stroke(); };
+                    drawL(142); drawL(247); drawL(357); drawL(467);
                 }
                 resolve();
             };
@@ -157,14 +197,13 @@
             await drawSticker(data, templateSelect.value);
             const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', 0.95));
             zip.file(data.unitId.replace(/[/\\?%*:|"<>]/g, '-') + ".jpg", blob);
-            statusDiv.innerText = `${i} / ${lines.length - 1} ပုံ ပြီးပါပြီ ကိုကို...`;
         }
         const content = await zip.generateAsync({type: "blob"});
         const link = document.createElement('a');
         link.href = URL.createObjectURL(content);
         link.download = (templateSelect.value.includes("1000158560") ? "Outdoor_Stickers.zip" : "Indoor_Stickers.zip");
         link.click();
-        statusDiv.innerText = "အောင်မြင်စွာ ထုတ်ပြီးပါပြီ ကိုကို!";
+        statusDiv.innerText = "အားလုံးပြီးပါပြီ ကိုကို!";
         bulkBtn.disabled = false;
     });
 
@@ -173,4 +212,3 @@
 </script>
 </body>
 </html>
-
