@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AC Sticker - Fixed Final Version</title>
+    <title>AC Sticker - Precision Brand Fix</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         body { font-family: sans-serif; padding: 10px; background: #1a1a1a; color: white; text-align: center; }
@@ -13,22 +13,18 @@
         label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 13px; color: #ccc; }
         
         input, select { 
-            width: 100%; 
-            padding: 12px; 
-            border: 1px solid #ccc; 
-            border-radius: 8px; 
-            font-size: 15px; 
-            background: #ffffff; 
-            color: #333; 
-            box-sizing: border-box; 
-            margin-bottom: 12px;
-            appearance: auto;
+            width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; 
+            background: #ffffff; color: #333; box-sizing: border-box; margin-bottom: 12px; appearance: auto;
         }
         
+        .brand-ctrl { background: #444; padding: 10px; border-radius: 8px; margin-bottom: 15px; }
+        .slider-row { display: flex; align-items: center; gap: 10px; }
+        input[type="range"] { flex: 1; }
+        input[type="number"] { width: 70px; text-align: center; margin: 0; }
+
         button { color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
         .btn-zip { background: #1a73e8; margin-bottom: 10px; }
         .btn-dl { background: #28a745; }
-        #status { margin-top: 10px; font-size: 13px; color: #ffeb3b; }
         #preview { width: 100%; border-radius: 8px; border: 2px solid #444; margin-top: 10px; }
         canvas { display: none; }
     </style>
@@ -41,31 +37,34 @@
     <div class="section">
         <h3>၁။ Bulk (Zip) ထုတ်ရန်</h3>
         <input type="file" id="csvInput" accept="*/*">
-        <button id="bulkBtn" class="btn-zip">CSV ဖြင့် ZIP ထုတ်မည်</button>
-        <div id="status"></div>
+        <button id="bulkBtn" class="btn-bulk">CSV ဖြင့် ZIP ထုတ်မည်</button>
+        <div id="status" style="font-size:12px; color:#ffeb3b; margin-top:5px;"></div>
     </div>
 
     <div class="section">
         <h3>၂။ တစ်ပုံချင်းစီ စစ်ဆေးရန် (Manual)</h3>
         <label>Unit Type:</label>
-        <select id="template">
+        <select id="template" onchange="update()">
             <option value="1000158560.png" selected>Outdoor Unit</option>
             <option value="1000158556.png">Indoor Unit</option>
         </select>
         
-        <label>Unit ID:</label><input type="text" id="unitId" value="CU-G-01">
-        <label>Room:</label><input type="text" id="room" value="M&E Control Room">
-        <label>Brand:</label>
-        <select id="brand">
-            <option selected>SUMMIT</option><option>DAIKIN</option><option>CHIGO</option><option>HISENSE</option><option>SHIMAZU</option>
-        </select>
-        <label>Type:</label>
-        <select id="type">
-            <option selected>Wall-Mounted</option><option>Ceiling Cassette</option><option>Floor Standing</option>
-        </select>
-        <div style="display:flex; gap:10px;">
-            <div style="flex:1;"><label>HP:</label><select id="cooling"><option>1</option><option>1.5</option><option selected>2</option><option>3</option><option>5</option></select></div>
-            <div style="flex:1;"><label>Gas:</label><select id="refrigerant"><option selected>R-32a</option><option>R-410a</option><option>R-22a</option></select></div>
+        <label>Unit ID & Room:</label>
+        <div style="display:flex; gap:5px;"><input type="text" id="unitId" value="CU-G-01"><input type="text" id="room" value="M&E Room"></div>
+        
+        <div class="brand-ctrl">
+            <label style="color:#4caf50;">Brand စာသား ဘယ်/ညာ ညှိရန် (X)</label>
+            <div class="slider-row">
+                <input type="range" id="brandX" min="350" max="650" value="415" oninput="syncX(this.value)">
+                <input type="number" id="numX" value="415" oninput="syncX(this.value)">
+            </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px;">
+            <select id="brand"><option selected>SUMMIT</option><option>DAIKIN</option></select>
+            <select id="type"><option selected>Wall-Mounted</option><option>Ceiling Cassette</option></select>
+            <select id="cooling"><option>1.5</option><option selected>2</option><option>3</option></select>
+            <select id="refrigerant"><option selected>R-32a</option><option>R-410a</option></select>
         </div>
         <button onclick="downloadSingle()" class="btn-dl">လက်ရှိပုံကို သိမ်းမည်</button>
     </div>
@@ -79,7 +78,12 @@
     const canvas = document.getElementById('mainCanvas');
     const ctx = canvas.getContext('2d');
     const previewImg = document.getElementById('preview');
-    const templateSelect = document.getElementById('template');
+
+    function syncX(val) {
+        document.getElementById('brandX').value = val;
+        document.getElementById('numX').value = val;
+        update();
+    }
 
     function drawSticker(data, template) {
         return new Promise((resolve) => {
@@ -92,30 +96,31 @@
                 ctx.font = "bold 56px sans-serif";
                 ctx.lineWidth = 4;
 
+                const bX = parseInt(document.getElementById('brandX').value);
+                const lineE = 960;
+                const xStart = 415; // : နဲ့ အနီးဆုံး စမှတ်
+
                 if (template === "1000158560.png") {
-                    // ကိုကိုပေးထားတဲ့ Outdoor Fixed အမှတ်များ
+                    // Outdoor Fixed
                     ctx.fillText(data.unitId, 566, 106);
                     ctx.fillText(data.room, 526, 166);
-                    ctx.fillText(data.brand, 565, 223);
+                    ctx.fillText(data.brand, bX, 223); // Slider နဲ့ ချိန်လို့ရသော Brand X
                     ctx.fillText(data.type, 518, 284);
                     ctx.fillText(data.cooling, 693, 343);
                     ctx.fillText(data.refrigerant, 627, 401);
                 } else {
-                    // Indoor Alignment (ပထမ မှတ်ထားတဲ့ X နဲ့ Y အတိုင်း)
-                    const xL = 480; const xCol = 400; const lineE = 960;
-                    
-                    ctx.fillText(data.unitId, xL, 130);
-                    ctx.fillText(data.room, xL, 235);
-                    ctx.fillText(":", xCol, 345);
-                    ctx.fillText(data.brand, xL, 345);
-                    ctx.fillText(data.type, xL, 455);
+                    // Indoor Alignment
+                    ctx.fillText(data.unitId, xStart, 130);
+                    ctx.fillText(data.room, xStart, 235);
+                    ctx.fillText(":", 400, 345);
+                    ctx.fillText(data.brand, bX, 345); // Slider နဲ့ ချိန်လို့ရသော Brand X
+                    ctx.fillText(data.type, xStart, 455);
                     ctx.fillText(data.cooling + " HP", 720, 560);
                     ctx.fillText(data.refrigerant, 720, 675);
 
-                    // မျဉ်းကြောင်းများ ပြန်ဆွဲခြင်း (Capacity/Gas အတွက် Colon အထိ ရှည်ထားပါသည်)
-                    const dL = (xS, y) => { ctx.beginPath(); ctx.moveTo(xS, y+12); ctx.lineTo(lineE, y+12); ctx.stroke(); };
-                    dL(xL, 130); dL(xL, 235); dL(xL, 345); dL(xL, 455);
-                    dL(xCol, 560); dL(xCol, 675);
+                    // မျဉ်းကြောင်းများ (: နေရာ X=400 အထိပဲ ဆွဲပါသည်)
+                    const dL = (y) => { ctx.beginPath(); ctx.moveTo(400, y+12); ctx.lineTo(lineE, y+12); ctx.stroke(); };
+                    dL(130); dL(235); dL(345); dL(455); dL(560); dL(675);
                 }
                 resolve();
             };
@@ -124,14 +129,11 @@
 
     async function update() {
         const data = {
-            unitId: document.getElementById('unitId').value,
-            room: document.getElementById('room').value,
-            brand: document.getElementById('brand').value,
-            type: document.getElementById('type').value,
-            cooling: document.getElementById('cooling').value,
-            refrigerant: document.getElementById('refrigerant').value
+            unitId: document.getElementById('unitId').value, room: document.getElementById('room').value,
+            brand: document.getElementById('brand').value, type: document.getElementById('type').value,
+            cooling: document.getElementById('cooling').value, refrigerant: document.getElementById('refrigerant').value
         };
-        await drawSticker(data, templateSelect.value);
+        await drawSticker(data, document.getElementById('template').value);
         previewImg.src = canvas.toDataURL('image/jpeg', 0.8);
     }
 
@@ -144,7 +146,7 @@
 
     document.getElementById('bulkBtn').addEventListener('click', async () => {
         const file = document.getElementById('csvInput').files[0];
-        if (!file) { alert("ကိုကို... CSV ဖိုင်အရင်ရွေးပါရှင်"); return; }
+        if (!file) return;
         const text = await file.text();
         const lines = text.split(/\r?\n/).filter(l => l.trim() !== "");
         const zip = new JSZip();
@@ -152,9 +154,9 @@
             const c = lines[i].split(',');
             if (c.length < 5) continue;
             const data = { unitId: c[0], room: c[1], brand: c[2], type: c[3], cooling: c[4], refrigerant: c[5] };
-            await drawSticker(data, templateSelect.value);
+            await drawSticker(data, document.getElementById('template').value);
             const b = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.95));
-            zip.file(data.unitId.replace(/[/\\?%*:|"<>]/g, '-') + ".jpg", b);
+            zip.file(data.unitId + ".jpg", b);
         }
         const content = await zip.generateAsync({type:"blob"});
         const link = document.createElement('a');
@@ -168,4 +170,3 @@
 </script>
 </body>
 </html>
-
