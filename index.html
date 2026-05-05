@@ -12,15 +12,15 @@
         h3 { color: #4caf50; margin-top: 0; border-bottom: 1px solid #555; padding-bottom: 5px; font-size: 16px; }
         label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 13px; color: #ccc; }
         
-        /* Input & Select ဒီဇိုင်းအသစ် (အဖြူရောင်၊ အနားလုံး) */
+        /* Input & Select ဒီဇိုင်း (အဖြူရောင်၊ အနားလုံး) */
         input, select { 
             width: 100%; 
             padding: 12px; 
             border: 1px solid #ccc; 
-            border-radius: 8px; /* အနားသပ်လုံးရန် */
+            border-radius: 8px; 
             font-size: 15px; 
-            background: #ffffff; /* နောက်ခံအဖြူ */
-            color: #333; /* စာလုံးအမည်း */
+            background: #ffffff; 
+            color: #333; 
             box-sizing: border-box; 
             margin-bottom: 12px; 
             box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
@@ -104,6 +104,7 @@
                 ctx.font = "bold 56px sans-serif";
 
                 if (selectedTemplate === "1000158560.png") {
+                    // Outdoor Alignment
                     const xStart = 465; const xMid = 630;
                     ctx.fillText(data.unitId, xStart, 128);
                     ctx.fillText(data.room, xStart, 196);
@@ -112,17 +113,37 @@
                     ctx.fillText(data.cooling, xMid + 50, 425);
                     ctx.fillText(data.refrigerant, xMid + 30, 493);
                 } else {
-                    const xLeft = 465; const xRight = 720;
+                    // Indoor Alignment & Drawing Lines
+                    const xLeft = 465; const xRight = 720; const lineEnd = 950;
+                    
                     ctx.fillText(data.unitId, xLeft, 125);
                     ctx.fillText(data.room, xLeft, 235);
                     
-                    // Brand အတွက် ( : ) ကို အရှေ့ဘက် ၄၀ pixel အကွာတွင် ထည့်သွင်းပေးထားပါသည်
-                    ctx.fillText(":", xLeft - 40, 345);
+                    // Brand အတွက် ( : ) ကို အပေါ်စာကြောင်းများနှင့် တစ်တန်းတည်းဖြစ်အောင် ချိန်ထားပါသည်
+                    ctx.fillText(":", 395, 345);
                     ctx.fillText(data.brand, xLeft, 345);
                     
                     ctx.fillText(data.type, xLeft, 455);
                     ctx.fillText(data.cooling + " HP", xRight, 555);
                     ctx.fillText(data.refrigerant, xRight, 670);
+
+                    // စာသားများအောက်တွင် မျဉ်းကြောင်းများဆွဲခြင်း
+                    ctx.lineWidth = 3; // မျဉ်းအထူ
+                    ctx.strokeStyle = "black"; // မျဉ်းအရောင်
+                    
+                    const drawLine = (startX, y, endX) => {
+                        ctx.beginPath();
+                        ctx.moveTo(startX, y);
+                        ctx.lineTo(endX, y);
+                        ctx.stroke();
+                    };
+
+                    drawLine(xLeft, 138, lineEnd); // Unit ID အောက်မျဉ်း
+                    drawLine(xLeft, 248, lineEnd); // Room အောက်မျဉ်း
+                    drawLine(xLeft, 358, lineEnd); // Brand အောက်မျဉ်း
+                    drawLine(xLeft, 468, lineEnd); // Type အောက်မျဉ်း
+                    drawLine(xRight, 568, lineEnd); // HP အောက်မျဉ်း
+                    drawLine(xRight, 683, lineEnd); // Gas အောက်မျဉ်း
                 }
                 resolve();
             };
@@ -149,6 +170,7 @@
         link.click();
     }
 
+    // Bulk Zip Generation
     bulkBtn.addEventListener('click', async () => {
         const file = document.getElementById('csvInput').files[0];
         if (!file) { alert("ကိုကို... CSV ဖိုင်အရင်ရွေးပေးပါရှင်"); return; }
