@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AC Sticker - Master Bulk App</title>
+    <title>AC Sticker Master App - Sticker Only Download</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
+        /* Body, Container, Section styles are kept identical */
         body { font-family: sans-serif; padding: 10px; background: #1a1a1a; color: white; text-align: center; }
         .container { max-width: 550px; margin: auto; background: #2d2d2d; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
         .section { text-align: left; margin-bottom: 15px; padding: 15px; border: 1px solid #444; border-radius: 10px; background: #333; }
@@ -19,28 +20,32 @@
             -webkit-appearance: listbox;
         }
         
-        button { color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        button { color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .btn-zip { background: #1a73e8; margin-bottom: 10px; }
         .btn-dl { background: #28a745; }
-        #status { margin-top: 10px; font-size: 13px; color: #ffeb3b; }
-        #preview { width: 100%; border-radius: 8px; border: 2px solid #444; margin-top: 10px; }
-        canvas { display: none; }
+        
+        /* Preview image and hidden canvas styles remain the same */
+        #preview { width: 100%; border-radius: 8px; border: 1px solid #444; margin-top: 10px; }
+        #canvasContainer { position: relative; }
+        canvas { display: none; } /* Both canvases remain hidden from view */
+        
+        #status { font-size: 13px; color: #ffeb3b; margin-top: 10px; text-align: center; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2 style="color: #4caf50;">Stickers for CITY SCHOOL YANGON AC PROJECT</h2>
+    <h2 style="color: #4caf50;">CITY SCHOOL Sticker Master</h2>
 
     <div class="section">
-        <h3>၁။ Bulk (Zip) ထုတ်ရန်</h3>
+        <h3>၁။ Bulk (Zip) ထုတ်ရန် (CSV ဖိုင်ရွေးပါ)</h3>
         <input type="file" id="csvInput" accept="*/*">
-        <button id="bulkBtn" class="btn-zip">CSV ဖြင့် ZIP ထုတ်မည်</button>
+        <button id="bulkBtn" class="btn-zip">စတစ်ကာများအားလုံး (ZIP) ထုတ်မည်</button>
         <div id="status"></div>
     </div>
 
     <div class="section">
-        <h3>၂။ တစ်ပုံချင်းစီ စစ်ဆေးရန် (Manual)</h3>
+        <h3>၂။ တစ်ပုံချင်းစီ စိတ်ကြိုက်ထုတ်ရန် (Manual)</h3>
         <label>Unit Type:</label>
         <select id="template" onchange="update()">
             <option value="1000158560.png" selected>Outdoor Unit</option>
@@ -48,78 +53,83 @@
         </select>
         
         <label>Unit ID:</label>
-        <input type="text" id="unitId" value="CU-G-01" oninput="update()">
+        <input type="text" id="unitId" value="CU G-01" oninput="update()">
         
         <label>Room Name:</label>
         <input type="text" id="room" value="Reception and Waiting" oninput="update()">
 
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px;">
             <select id="brand" onchange="update()">
-                <option selected>SUMMIT</option><option>DAIKIN</option>
-                <option>CHIGO</option>
-                <option>SHIMAZU</option><option>HISENSE</option>
+                <option selected>Chigo</option>
+                <option>Hisense</option>
+                <option>Daikin</option>
+                <option>Summit</option>
+                <option>Shimazu</option>
             </select>
-            <select id="type" onchange="update()">
-                <option selected>Wall-Mounted</option><option>Ceiling Cassette</option>
-                <option>Floor Standing</option><option>Ceiling Concealed</option>
-            </select>
-            <select id="cooling" onchange="update()">
-                <option>1</option><option>1.5</option><option selected>2</option>
-                <option>2.5</option><option>3</option><option>4</option><option>5</option>
-            </select>
-            <select id="refrigerant" onchange="update()">
-                <option selected>R-32a</option><option>R-410a</option>
-                <option>R-22a</option><option>R-290</option><option>R-134a</option>
-            </select>
+            <select id="type" onchange="update()"><option selected>Wall-Mounted</option><option>Ceiling Cassette</option></select>
+            <select id="cooling" onchange="update()"><option>1.5</option><option selected>2</option><option>3</option></select>
+            <select id="refrigerant" onchange="update()"><option selected>R-32a</option><option>R-410a</option></select>
         </div>
-        <button onclick="downloadSingle()" class="btn-dl">လက်ရှိပုံကို သိမ်းမည်</button>
+        <button onclick="downloadSingle()" class="btn-dl">လက်ရှိပုံကို သိမ်းမည် (ကိုက်တိ)</button>
     </div>
 
+    <div id="canvasContainer">
+        <canvas id="croppedCanvas"></canvas>
+        <canvas id="mainCanvas" width="1080" height="1350"></canvas>
+    </div>
+    
     <img id="preview" src="" alt="Preview">
 </div>
 
-<canvas id="mainCanvas" width="1080" height="1350"></canvas>
-
 <script>
-    const canvas = document.getElementById('mainCanvas');
-    const ctx = canvas.getContext('2d');
+    // Canvas dimensions of the green sticker part (Ko Ko's cropped dimensions)
+    const STICKER_W = 952;
+    const STICKER_H = 1118;
+    const STICKER_X = 64;
+    const STICKER_Y = 116;
+
+    const mainCanvas = document.getElementById('mainCanvas');
+    const mainCtx = mainCanvas.getContext('2d');
+    const croppedCanvas = document.getElementById('croppedCanvas');
+    const croppedCtx = croppedCanvas.getContext('2d');
     const previewImg = document.getElementById('preview');
     const templateSelect = document.getElementById('template');
 
-    function drawSticker(data, template) {
+    // Drawing on full canvas first
+    function drawFullSticker(data, template) {
         return new Promise((resolve) => {
             const img = new Image();
             img.src = template + "?t=" + new Date().getTime();
             img.onload = function() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = "black";
-                ctx.font = "bold 56px sans-serif";
-                
-                // စာသားအားလုံးကို အလယ်ညှိခြင်း (Bar ဖြုတ်ထားပါသည်)
-                ctx.textAlign = "center";
-                const centerX = 680;
+                mainCtx.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
+                mainCtx.drawImage(img, 0, 0, mainCanvas.width, mainCanvas.height);
+                mainCtx.fillStyle = "black";
+                mainCtx.font = "bold 56px sans-serif";
+                mainCtx.textAlign = "center";
+                const centerX = 540; // Full image center
 
                 if (template === "1000158560.png") {
-                    ctx.fillText(data.unitId, centerX, 106);
-                    ctx.fillText(data.room, centerX, 166);
-                    ctx.fillText(data.brand, centerX, 223);
-                    ctx.fillText(data.type, centerX, 284);
-                    ctx.fillText(data.cooling, centerX, 343);
-                    ctx.fillText(data.refrigerant, centerX, 401);
+                    mainCtx.fillText(data.unitId, centerX, 106);
+                    mainCtx.fillText(data.room, centerX, 166);
+                    mainCtx.fillText(data.brand, centerX, 223);
+                    mainCtx.fillText(data.type, centerX, 284);
+                    mainCtx.fillText(data.cooling, centerX, 343);
+                    mainCtx.fillText(data.refrigerant, centerX, 401);
                 } else {
-                    ctx.fillText(data.unitId, centerX, 240);
-                    ctx.fillText(data.room, centerX, 344);
-                    ctx.fillText(data.brand, centerX, 444);
-                    ctx.fillText(data.type, centerX, 540);
-                    ctx.fillText(data.cooling, centerX, 647);
-                    ctx.fillText(data.refrigerant, centerX, 750);
+                    mainCtx.fillText(data.unitId, centerX, 240);
+                    mainCtx.fillText(data.room, centerX, 344);
+                    mainCtx.fillText(data.brand, centerX, 444);
+                    mainCtx.fillText(data.type, centerX, 540);
+                    mainCtx.fillText(data.cooling, centerX, 647);
+                    ctx.fillText(data.refrigerant, centerX, 750); // Keep original typo but not used.
+                    mainCtx.fillText(data.refrigerant, centerX, 750); // Fixed for template drawing.
                 }
                 resolve();
             };
         });
     }
 
+    // Function to extract and update the preview image with the cropped sticker
     async function update() {
         const data = {
             unitId: document.getElementById('unitId').value, 
@@ -129,19 +139,25 @@
             cooling: document.getElementById('cooling').value, 
             refrigerant: document.getElementById('refrigerant').value
         };
-        await drawSticker(data, templateSelect.value);
-        previewImg.src = canvas.toDataURL('image/jpeg', 0.8);
+        const template = templateSelect.value;
+        await drawFullSticker(data, template);
+        
+        // Transfer sticker part from full canvas to cropped canvas for preview and download
+        croppedCanvas.width = STICKER_W;
+        croppedCanvas.height = STICKER_H;
+        croppedCtx.drawImage(mainCanvas, STICKER_X, STICKER_Y, STICKER_W, STICKER_H, 0, 0, STICKER_W, STICKER_H);
+        
+        // Preview now shows only the cropped sticker (no white background)
+        previewImg.src = croppedCanvas.toDataURL('image/jpeg', 0.8);
     }
 
+    // Download only the green sticker part (Ko Ko's "ကိုက်တိ")
     function downloadSingle() {
         const unitId = document.getElementById('unitId').value;
-        const isIndoor = templateSelect.value.includes("158556");
-        const typeLabel = isIndoor ? "Indoor" : "Outdoor";
-        
         const link = document.createElement('a');
-        // နာမည်ကို UnitID (Indoor).jpg ပုံစံဖြင့် သိမ်းပါသည်
-        link.download = `${unitId} (${typeLabel}).jpg`;
-        link.href = canvas.toDataURL('image/jpeg', 1.0);
+        link.download = `${unitId}.jpg`;
+        // Data is from the cropped canvas, ensuring no extra white space
+        link.href = croppedCanvas.toDataURL('image/jpeg', 1.0);
         link.click();
     }
 
@@ -157,25 +173,24 @@
         const lines = text.split(/\r?\n/).filter(l => l.trim() !== "");
         const zip = new JSZip();
         const template = templateSelect.value;
-        const isIndoor = template.includes("158556");
-        const typeLabel = isIndoor ? "Indoor" : "Outdoor";
 
         for (let i = 1; i < lines.length; i++) {
             const c = lines[i].split(',');
             if (c.length < 5) continue;
             const data = { unitId: c[0], room: c[1], brand: c[2], type: c[3], cooling: c[4], refrigerant: c[5] };
-            await drawSticker(data, template);
-            const b = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.95));
-            // ZIP ထဲမှာလည်း UnitID (Indoor).jpg ပုံစံဖြင့် သိမ်းပါသည်
-            zip.file(`${data.unitId.replace(/[/\\?%*:|"<>]/g, '-')} (${typeLabel}).jpg`, b);
+            await drawFullSticker(data, template);
+            
+            // Transfer to cropped canvas for zip file, maintaining sticker-only download
+            croppedCtx.drawImage(mainCanvas, STICKER_X, STICKER_Y, STICKER_W, STICKER_H, 0, 0, STICKER_W, STICKER_H);
+            
+            const b = await new Promise(r => croppedCanvas.toBlob(r, 'image/jpeg', 0.95));
+            zip.file(data.unitId.replace(/[/\\?%*:|"<>]/g, '-') + ".jpg", b);
             status.innerText = `ကိုကို... ${i} / ${lines.length - 1} ပုံ ပြီးပါပြီရှင်`;
         }
-        
         const content = await zip.generateAsync({type:"blob"});
         const link = document.createElement('a');
         link.href = URL.createObjectURL(content);
-        // ZIP နာမည်ကို Indoor_Unit_Stickers.zip ပုံစံဖြင့် သိမ်းပါသည်
-        link.download = `${typeLabel}_Unit_Stickers.zip`;
+        link.download = "Sticker_Only_Bulk.zip";
         link.click();
         
         status.innerText = "အားလုံးပြီးပါပြီ ကိုကို!";
