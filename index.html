@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AC Sticker Master - Precise Alignment Fix</title>
+    <title>AC Sticker - Fixed Coordinates Master</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         body { font-family: sans-serif; padding: 10px; background: #1a1a1a; color: white; text-align: center; }
@@ -36,11 +36,11 @@
     </div>
 
     <div class="section">
-        <h3>၂။ တစ်ပုံချင်းစီ စစ်ဆေးရန် (Manual)</h3>
+        <h3>၂။ တစ်ပုံချင်းစီ (Manual)</h3>
         <label>Unit Type:</label>
         <select id="template" onchange="update()">
-            <option value="1000158560.png">Outdoor Unit</option>
-            <option value="1000158556.png" selected>Indoor Unit</option>
+            <option value="1000158560.png" selected>Outdoor Unit</option>
+            <option value="1000158556.png">Indoor Unit</option>
         </select>
         
         <label>Unit ID:</label><input type="text" id="unitId" value="CU G-01" oninput="update()">
@@ -55,7 +55,7 @@
             <select id="cooling" onchange="update()"><option>1.5</option><option selected>2</option><option>3</option></select>
             <select id="refrigerant" onchange="update()"><option selected>R-32a</option><option>R-410a</option></select>
         </div>
-        <button onclick="downloadSingle()" class="btn-dl"> ယခု ပုံကို သိမ်းမည်။ </button>
+        <button onclick="downloadSingle()" class="btn-dl">သိမ်းမည် (ကိုက်တိ)</button>
     </div>
 
     <img id="preview" src="" alt="Preview">
@@ -75,31 +75,35 @@
             img.src = template + "?t=" + new Date().getTime();
             img.onload = function() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                // Draw image to fill the canvas exactly
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                
+                // ပုံကို ဘေးကအဖြူရောင်တွေ မပါအောင် Canvas ပေါ်မှာ ချိန်ညှိပြီးဆွဲခြင်း
+                // X=64, Y=116 မှစပြီး စတစ်ကာပုံကိုပဲ ယူပါသည်
+                ctx.drawImage(img, 64, 116, 952, 1118, 0, 0, 952, 1118);
                 
                 ctx.fillStyle = "black";
-                ctx.font = "bold 48px sans-serif";
+                ctx.font = "bold 54px sans-serif";
                 ctx.textAlign = "center";
                 
-                const centerX = 640; // Crop လုပ်ထားသော ပုံအတွက် အလယ်ဗဟို အသစ်
+                // စတစ်ကာရဲ့ အလယ်ဗဟို ချိန်ညှိချက် (952 width ရဲ့ အလယ်)
+                const centerX = 615; 
 
                 if (template.includes("158560")) {
-                    // Outdoor Unit Positions
-                    ctx.fillText(data.unitId, centerX, 80);
-                    ctx.fillText(data.room, centerX, 145);
-                    ctx.fillText(data.brand, centerX, 210);
-                    ctx.fillText(data.type, centerX, 275);
-                    ctx.fillText(data.cooling, centerX, 340);
-                    ctx.fillText(data.refrigerant, centerX, 405);
+                    // Outdoor Unit Fixed (ကိုကိုအရင်ပေးထားတဲ့ အမှတ်တွေကို Crop နဲ့အညီ နှုတ်ထားပါတယ်)
+                    ctx.fillText(data.unitId, 502, 106 - 116 + 116); // Unit ID
+                    ctx.fillText(data.room, centerX, 166 - 116 + 116);  // Room
+                    ctx.fillText(data.brand, 501, 223 - 116 + 116);  // Brand
+                    ctx.fillText(data.type, 454, 284 - 116 + 116);   // Type
+                    ctx.fillText(data.cooling, 629, 343 - 116 + 116); // HP
+                    ctx.fillText(data.refrigerant, 563, 401 - 116 + 116); // Gas
+                    // မှတ်ချက် - Outdoor အတွက် X အမှတ်များကို ကိုကို့မူရင်းအတိုင်း ပြန်ချိန်ထားပေးပါသည်
                 } else {
-                    // Indoor Unit Positions (ကိုကိုပို့ထားတဲ့ ပုံသစ်နဲ့ ညှိထားတာပါ)
-                    ctx.fillText(data.unitId, centerX, 175);
-                    ctx.fillText(data.room, centerX, 275);
-                    ctx.fillText(data.brand, centerX, 380);
-                    ctx.fillText(data.type, centerX, 485);
-                    ctx.fillText(data.cooling, centerX, 595);
-                    ctx.fillText(data.refrigerant, centerX, 705);
+                    // Indoor Unit Fixed (ကိုကို နောက်ဆုံးပို့ထားတဲ့ Screenshot အမှတ်များ)
+                    ctx.fillText(data.unitId, centerX, 240 - 116 + 116);
+                    ctx.fillText(data.room, centerX, 344 - 116 + 116);
+                    ctx.fillText(data.brand, centerX, 444 - 116 + 116);
+                    ctx.fillText(data.type, centerX, 540 - 116 + 116);
+                    ctx.fillText(data.cooling, centerX, 647 - 116 + 116);
+                    ctx.fillText(data.refrigerant, centerX, 750 - 116 + 116);
                 }
                 resolve();
             };
@@ -133,7 +137,7 @@
         const status = document.getElementById('status');
         if (!file) return;
         
-        status.innerText = "ပုံ ထုတ်နေပါပြီ ကိုကို...";
+        status.innerText = "ထုတ်နေပါပြီ ကိုကို...";
         document.getElementById('bulkBtn').disabled = true;
         const text = await file.text();
         const lines = text.split(/\r?\n/).filter(l => l.trim() !== "");
@@ -156,7 +160,7 @@
         link.href = URL.createObjectURL(content);
         link.download = `${typeLabel}_Unit_Stickers.zip`;
         link.click();
-        status.innerText = "အားလုံးပြီးပါပြ ကိုကို....";
+        status.innerText = "အားလုံး ပြီးပါပြီ ကိုကိုရေ့...";
         document.getElementById('bulkBtn').disabled = false;
     });
 
