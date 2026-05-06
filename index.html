@@ -53,9 +53,9 @@
             </select>
             <select id="type" onchange="update()"><option selected>Wall-Mounted</option><option>Ceiling Cassette</option></select>
             <select id="cooling" onchange="update()"><option>1.5</option><option selected>2</option><option>3</option></select>
-            <select id="refrigerant" onchange="update()"><option selected>R-32a</option><option>R-410a</option></select>
+            <select id="refrigerant" onchange="update()"><option selected>R-32a</option><option>R-410a</option>R-22a<option></select>
         </div>
-        <button onclick="downloadSingle()" class="btn-dl">သိမ်းမည် (ကိုက်တိ)</button>
+        <button onclick="downloadSingle()" class="btn-dl"> လက်ရှိပုံကို သိမ်းမည်</button>
     </div>
 
     <img id="preview" src="" alt="Preview">
@@ -140,7 +140,7 @@
         const status = document.getElementById('status');
         if (!file) return;
         
-        status.innerText = "ထုတ်နေပါပြီ...";
+        status.innerText = "ထုတ်နေပါပြီ ကိုကို...";
         document.getElementById('bulkBtn').disabled = true;
         const text = await file.text();
         const lines = text.split(/\r?\n/).filter(l => l.trim() !== "");
@@ -158,7 +158,7 @@
             croppedCtx.drawImage(mainCanvas, 64, 116, 952, 1118, 0, 0, 952, 1118);
             const b = await new Promise(r => croppedCanvas.toBlob(r, 'image/jpeg', 0.95));
             zip.file(`${data.unitId} (${typeLabel}).jpg`, b);
-            status.innerText = `${i} / ${lines.length - 1} ပြီးပါပြီ ကိုကို`;
+            status.innerText = `${i} / ${lines.length - 1} ပြီးသွားပါပြီ ကိုကို`;
         }
         
         const content = await zip.generateAsync({type:"blob"});
@@ -166,7 +166,7 @@
         link.href = URL.createObjectURL(content);
         link.download = `${typeLabel}_Unit_Stickers.zip`;
         link.click();
-        status.innerText = "အားလုံးပြီးပါပြီရှင်!";
+        status.innerText = "အားလုံး ပြီးပါပြီ ကိုကို...";
         document.getElementById('bulkBtn').disabled = false;
     });
 
