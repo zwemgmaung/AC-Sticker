@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AC Sticker - Fixed Coordinates Master</title>
+    <title>AC Sticker - Ultimate Fixed Version</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         body { font-family: sans-serif; padding: 10px; background: #1a1a1a; color: white; text-align: center; }
@@ -18,7 +18,7 @@
         button { color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
         .btn-zip { background: #1a73e8; margin-bottom: 10px; }
         .btn-dl { background: #28a745; }
-        #preview { width: 100%; border-radius: 8px; border: 1px solid #444; margin-top: 10px; }
+        #preview { width: 100%; border-radius: 8px; border: 1px solid #444; margin-top: 10px; background: white; }
         canvas { display: none; }
         #status { font-size: 13px; color: #ffeb3b; margin-top: 10px; }
     </style>
@@ -39,8 +39,8 @@
         <h3>၂။ တစ်ပုံချင်းစီ (Manual)</h3>
         <label>Unit Type:</label>
         <select id="template" onchange="update()">
-            <option value="1000158560.png" selected>Outdoor Unit</option>
-            <option value="1000158556.png">Indoor Unit</option>
+            <option value="1000158560.png">Outdoor Unit</option>
+            <option value="1000158556.png" selected>Indoor Unit</option>
         </select>
         
         <label>Unit ID:</label><input type="text" id="unitId" value="CU G-01" oninput="update()">
@@ -61,11 +61,14 @@
     <img id="preview" src="" alt="Preview">
 </div>
 
-<canvas id="stickerCanvas" width="952" height="1118"></canvas>
+<canvas id="mainCanvas" width="1080" height="1350"></canvas>
+<canvas id="croppedCanvas" width="952" height="1118"></canvas>
 
 <script>
-    const canvas = document.getElementById('stickerCanvas');
-    const ctx = canvas.getContext('2d');
+    const mainCanvas = document.getElementById('mainCanvas');
+    const mainCtx = mainCanvas.getContext('2d');
+    const croppedCanvas = document.getElementById('croppedCanvas');
+    const croppedCtx = croppedCanvas.getContext('2d');
     const previewImg = document.getElementById('preview');
     const templateSelect = document.getElementById('template');
 
@@ -74,36 +77,32 @@
             const img = new Image();
             img.src = template + "?t=" + new Date().getTime();
             img.onload = function() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                mainCtx.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
+                mainCtx.drawImage(img, 0, 0, mainCanvas.width, mainCanvas.height);
                 
-                // ပုံကို ဘေးကအဖြူရောင်တွေ မပါအောင် Canvas ပေါ်မှာ ချိန်ညှိပြီးဆွဲခြင်း
-                // X=64, Y=116 မှစပြီး စတစ်ကာပုံကိုပဲ ယူပါသည်
-                ctx.drawImage(img, 64, 116, 952, 1118, 0, 0, 952, 1118);
+                mainCtx.fillStyle = "black";
+                mainCtx.font = "bold 56px sans-serif";
+                mainCtx.textAlign = "center";
                 
-                ctx.fillStyle = "black";
-                ctx.font = "bold 54px sans-serif";
-                ctx.textAlign = "center";
-                
-                // စတစ်ကာရဲ့ အလယ်ဗဟို ချိန်ညှိချက် (952 width ရဲ့ အလယ်)
-                const centerX = 615; 
+                // ကိုကိုအရင်က မှာထားတဲ့ Fixed အမှတ်များ (Full Size 1080x1350 ပေါ်မှာ အခြေခံထားပါသည်)
+                const centerX = 680; 
 
                 if (template.includes("158560")) {
-                    // Outdoor Unit Fixed (ကိုကိုအရင်ပေးထားတဲ့ အမှတ်တွေကို Crop နဲ့အညီ နှုတ်ထားပါတယ်)
-                    ctx.fillText(data.unitId, 502, 106 - 116 + 116); // Unit ID
-                    ctx.fillText(data.room, centerX, 166 - 116 + 116);  // Room
-                    ctx.fillText(data.brand, 501, 223 - 116 + 116);  // Brand
-                    ctx.fillText(data.type, 454, 284 - 116 + 116);   // Type
-                    ctx.fillText(data.cooling, 629, 343 - 116 + 116); // HP
-                    ctx.fillText(data.refrigerant, 563, 401 - 116 + 116); // Gas
-                    // မှတ်ချက် - Outdoor အတွက် X အမှတ်များကို ကိုကို့မူရင်းအတိုင်း ပြန်ချိန်ထားပေးပါသည်
+                    // Outdoor Unit Fixed Coords
+                    mainCtx.fillText(data.unitId, centerX, 106);
+                    mainCtx.fillText(data.room, centerX, 166);
+                    mainCtx.fillText(data.brand, centerX, 223);
+                    mainCtx.fillText(data.type, centerX, 284);
+                    mainCtx.fillText(data.cooling, centerX, 343);
+                    mainCtx.fillText(data.refrigerant, centerX, 401);
                 } else {
-                    // Indoor Unit Fixed (ကိုကို နောက်ဆုံးပို့ထားတဲ့ Screenshot အမှတ်များ)
-                    ctx.fillText(data.unitId, centerX, 240 - 116 + 116);
-                    ctx.fillText(data.room, centerX, 344 - 116 + 116);
-                    ctx.fillText(data.brand, centerX, 444 - 116 + 116);
-                    ctx.fillText(data.type, centerX, 540 - 116 + 116);
-                    ctx.fillText(data.cooling, centerX, 647 - 116 + 116);
-                    ctx.fillText(data.refrigerant, centerX, 750 - 116 + 116);
+                    // Indoor Unit Fixed Coords
+                    mainCtx.fillText(data.unitId, centerX, 240);
+                    mainCtx.fillText(data.room, centerX, 344);
+                    mainCtx.fillText(data.brand, centerX, 444);
+                    mainCtx.fillText(data.type, centerX, 540);
+                    mainCtx.fillText(data.cooling, centerX, 647);
+                    mainCtx.fillText(data.refrigerant, centerX, 750);
                 }
                 resolve();
             };
@@ -120,15 +119,19 @@
             refrigerant: document.getElementById('refrigerant').value
         };
         await drawSticker(data, templateSelect.value);
-        previewImg.src = canvas.toDataURL('image/jpeg', 0.9);
+        // Preview မှာ ပုံအပြည့် ပြပေးပါတယ်
+        previewImg.src = mainCanvas.toDataURL('image/jpeg', 0.8);
     }
 
     function downloadSingle() {
+        // သိမ်းတဲ့အခါမှသာ Crop လုပ်ပါသည်
+        croppedCtx.drawImage(mainCanvas, 64, 116, 952, 1118, 0, 0, 952, 1118);
+        
         const unitId = document.getElementById('unitId').value;
         const typeLabel = templateSelect.value.includes("158556") ? "Indoor" : "Outdoor";
         const link = document.createElement('a');
         link.download = `${unitId} (${typeLabel}).jpg`;
-        link.href = canvas.toDataURL('image/jpeg', 1.0);
+        link.href = croppedCanvas.toDataURL('image/jpeg', 1.0);
         link.click();
     }
 
@@ -137,7 +140,7 @@
         const status = document.getElementById('status');
         if (!file) return;
         
-        status.innerText = "ထုတ်နေပါပြီ ကိုကို...";
+        status.innerText = "ထုတ်နေပါပြီ...";
         document.getElementById('bulkBtn').disabled = true;
         const text = await file.text();
         const lines = text.split(/\r?\n/).filter(l => l.trim() !== "");
@@ -150,7 +153,10 @@
             if (c.length < 5) continue;
             const data = { unitId: c[0], room: c[1], brand: c[2], type: c[3], cooling: c[4], refrigerant: c[5] };
             await drawSticker(data, template);
-            const b = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.95));
+            
+            // Bulk ZIP အတွက်လည်း Crop လုပ်ပါသည်
+            croppedCtx.drawImage(mainCanvas, 64, 116, 952, 1118, 0, 0, 952, 1118);
+            const b = await new Promise(r => croppedCanvas.toBlob(r, 'image/jpeg', 0.95));
             zip.file(`${data.unitId} (${typeLabel}).jpg`, b);
             status.innerText = `${i} / ${lines.length - 1} ပြီးပါပြီ ကိုကို`;
         }
@@ -160,7 +166,7 @@
         link.href = URL.createObjectURL(content);
         link.download = `${typeLabel}_Unit_Stickers.zip`;
         link.click();
-        status.innerText = "အားလုံး ပြီးပါပြီ ကိုကိုရေ့...";
+        status.innerText = "အားလုံးပြီးပါပြီရှင်!";
         document.getElementById('bulkBtn').disabled = false;
     });
 
