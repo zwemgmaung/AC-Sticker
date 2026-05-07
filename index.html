@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AC Sticker - Master Bulk App</title>
+    <title>AC Sticker - Master Bulk App with Slider</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         body { font-family: sans-serif; padding: 10px; background: #1a1a1a; color: white; text-align: center; }
@@ -19,11 +19,16 @@
             -webkit-appearance: listbox;
         }
         
+        .room-ctrl { background: #444; padding: 10px; border-radius: 8px; margin-bottom: 15px; }
+        .slider-row { display: flex; align-items: center; gap: 10px; }
+        input[type="range"] { flex: 1; }
+        input[type="number"] { width: 75px; text-align: center; margin: 0; }
+
         button { color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
         .btn-zip { background: #1a73e8; margin-bottom: 10px; }
         .btn-dl { background: #28a745; }
         #status { margin-top: 10px; font-size: 13px; color: #ffeb3b; }
-        #preview { width: 100%; border-radius: 8px; border: 2px solid #444; margin-top: 10px; }
+        #preview { width: 100%; border-radius: 8px; border: 2px solid #444; margin-top: 10px; background: white; }
         canvas { display: none; }
     </style>
 </head>
@@ -50,6 +55,13 @@
         <label>Unit ID:</label>
         <input type="text" id="unitId" value="CU-G-01" oninput="update()">
         
+        <div class="room-ctrl">
+            <label style="color:#4caf50;">Room စာသား ဘယ်/ညာ ညှိရန် (X)</label>
+            <div class="slider-row">
+                <input type="range" id="roomX" min="300" max="900" value="680" oninput="syncX(this.value)">
+                <input type="number" id="numX" value="680" oninput="syncX(this.value)">
+            </div>
+        </div>
         <label>Room Name:</label>
         <input type="text" id="room" value="Reception and Waiting" oninput="update()">
 
@@ -72,48 +84,57 @@
                 <option>R-22a</option><option>R-290</option><option>R-134a</option>
             </select>
         </div>
-        <button onclick="downloadSingle()" class="btn-dl">လက်ရှိပုံကို သိမ်းမည်</button>
+        <button onclick="downloadSingle()" class="btn-dl">လက်ရှိပုံကို သိမ်းမည် (ကိုက်တိ)</button>
     </div>
 
     <img id="preview" src="" alt="Preview">
 </div>
 
 <canvas id="mainCanvas" width="1080" height="1350"></canvas>
+<canvas id="croppedCanvas" width="990" height="1160"></canvas>
 
 <script>
-    const canvas = document.getElementById('mainCanvas');
-    const ctx = canvas.getContext('2d');
+    const mainCanvas = document.getElementById('mainCanvas');
+    const mainCtx = mainCanvas.getContext('2d');
+    const croppedCanvas = document.getElementById('croppedCanvas');
+    const croppedCtx = croppedCanvas.getContext('2d');
     const previewImg = document.getElementById('preview');
     const templateSelect = document.getElementById('template');
+
+    function syncX(val) {
+        document.getElementById('roomX').value = val;
+        document.getElementById('numX').value = val;
+        update();
+    }
 
     function drawSticker(data, template) {
         return new Promise((resolve) => {
             const img = new Image();
             img.src = template + "?t=" + new Date().getTime();
             img.onload = function() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = "black";
-                ctx.font = "bold 56px sans-serif";
+                mainCtx.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
+                mainCtx.drawImage(img, 0, 0, mainCanvas.width, mainCanvas.height);
+                mainCtx.fillStyle = "black";
+                mainCtx.font = "bold 56px sans-serif";
+                mainCtx.textAlign = "center";
                 
-                // စာသားအားလုံးကို အလယ်ညှိခြင်း (Bar ဖြုတ်ထားပါသည်)
-                ctx.textAlign = "center";
+                const rX = parseInt(document.getElementById('roomX').value);
                 const centerX = 680;
 
                 if (template === "1000158560.png") {
-                    ctx.fillText(data.unitId, centerX, 106);
-                    ctx.fillText(data.room, centerX, 166);
-                    ctx.fillText(data.brand, centerX, 223);
-                    ctx.fillText(data.type, centerX, 284);
-                    ctx.fillText(data.cooling, centerX, 343);
-                    ctx.fillText(data.refrigerant, centerX, 401);
+                    mainCtx.fillText(data.unitId, centerX, 106);
+                    mainCtx.fillText(data.room, rX, 166);
+                    mainCtx.fillText(data.brand, centerX, 223);
+                    mainCtx.fillText(data.type, centerX, 284);
+                    mainCtx.fillText(data.cooling, centerX, 343);
+                    mainCtx.fillText(data.refrigerant, centerX, 401);
                 } else {
-                    ctx.fillText(data.unitId, centerX, 240);
-                    ctx.fillText(data.room, centerX, 344);
-                    ctx.fillText(data.brand, centerX, 444);
-                    ctx.fillText(data.type, centerX, 540);
-                    ctx.fillText(data.cooling, centerX, 647);
-                    ctx.fillText(data.refrigerant, centerX, 750);
+                    mainCtx.fillText(data.unitId, centerX, 240);
+                    mainCtx.fillText(data.room, rX, 344);
+                    mainCtx.fillText(data.brand, centerX, 444);
+                    mainCtx.fillText(data.type, centerX, 540);
+                    mainCtx.fillText(data.cooling, centerX, 647);
+                    mainCtx.fillText(data.refrigerant, centerX, 750);
                 }
                 resolve();
             };
@@ -130,18 +151,18 @@
             refrigerant: document.getElementById('refrigerant').value
         };
         await drawSticker(data, templateSelect.value);
-        previewImg.src = canvas.toDataURL('image/jpeg', 0.8);
+        previewImg.src = mainCanvas.toDataURL('image/jpeg', 0.8);
     }
 
     function downloadSingle() {
+        // ကိုက်တိဖြစ်အောင် အမည်းရောင်ဘောင် အပြင်ဘက်ကနေ ဖြတ်ပါသည်
+        croppedCtx.drawImage(mainCanvas, 45, 95, 990, 1160, 0, 0, 990, 1160);
         const unitId = document.getElementById('unitId').value;
-        const isIndoor = templateSelect.value.includes("158556");
-        const typeLabel = isIndoor ? "Indoor" : "Outdoor";
+        const typeLabel = templateSelect.value.includes("158556") ? "Indoor" : "Outdoor";
         
         const link = document.createElement('a');
-        // နာမည်ကို UnitID (Indoor).jpg ပုံစံဖြင့် သိမ်းပါသည်
         link.download = `${unitId} (${typeLabel}).jpg`;
-        link.href = canvas.toDataURL('image/jpeg', 1.0);
+        link.href = croppedCanvas.toDataURL('image/jpeg', 1.0);
         link.click();
     }
 
@@ -157,24 +178,23 @@
         const lines = text.split(/\r?\n/).filter(l => l.trim() !== "");
         const zip = new JSZip();
         const template = templateSelect.value;
-        const isIndoor = template.includes("158556");
-        const typeLabel = isIndoor ? "Indoor" : "Outdoor";
+        const typeLabel = template.includes("158556") ? "Indoor" : "Outdoor";
 
         for (let i = 1; i < lines.length; i++) {
             const c = lines[i].split(',');
             if (c.length < 5) continue;
             const data = { unitId: c[0], room: c[1], brand: c[2], type: c[3], cooling: c[4], refrigerant: c[5] };
             await drawSticker(data, template);
-            const b = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.95));
-            // ZIP ထဲမှာလည်း UnitID (Indoor).jpg ပုံစံဖြင့် သိမ်းပါသည်
-            zip.file(`${data.unitId.replace(/[/\\?%*:|"<>]/g, '-')} (${typeLabel}).jpg`, b);
+            
+            croppedCtx.drawImage(mainCanvas, 45, 95, 990, 1160, 0, 0, 990, 1160);
+            const b = await new Promise(r => croppedCanvas.toBlob(r, 'image/jpeg', 0.95));
+            zip.file(`${data.unitId} (${typeLabel}).jpg`, b);
             status.innerText = `ကိုကို... ${i} / ${lines.length - 1} ပုံ ပြီးပါပြီရှင်`;
         }
         
         const content = await zip.generateAsync({type:"blob"});
         const link = document.createElement('a');
         link.href = URL.createObjectURL(content);
-        // ZIP နာမည်ကို Indoor_Unit_Stickers.zip ပုံစံဖြင့် သိမ်းပါသည်
         link.download = `${typeLabel}_Unit_Stickers.zip`;
         link.click();
         
