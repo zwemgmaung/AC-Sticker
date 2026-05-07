@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AC Sticker - Final Precise Control</title>
+    <title>AC Sticker - Final Full Image Version</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         body { font-family: sans-serif; padding: 10px; background: #1a1a1a; color: white; text-align: center; }
@@ -55,20 +55,17 @@
             <select id="cooling" onchange="drawOnly()"><option>1.5</option><option selected>2</option><option>3</option></select>
             <select id="refrigerant" onchange="drawOnly()"><option selected>R-32a</option><option>R-410a</option><option>R-22a</option></select>
         </div>
-        <button onclick="downloadSingle()" class="btn-dl">ယခုပုံကို သိမ်းမည်</button>
+        <button onclick="downloadSingle()" class="btn-dl">လက်ရှိပုံကို သိမ်းမည်</button>
     </div>
 
     <img id="preview" src="" alt="Preview">
 </div>
 
 <canvas id="mainCanvas" width="1080" height="1350"></canvas>
-<canvas id="croppedCanvas" width="990" height="1160"></canvas>
 
 <script>
     const mainCanvas = document.getElementById('mainCanvas');
     const mainCtx = mainCanvas.getContext('2d');
-    const croppedCanvas = document.getElementById('croppedCanvas');
-    const croppedCtx = croppedCanvas.getContext('2d');
     const previewImg = document.getElementById('preview');
     const templateSelect = document.getElementById('template');
 
@@ -100,7 +97,6 @@
         const centerX = 680; 
 
         if (templateSelect.value.includes("158560")) {
-            // Outdoor Fixed Coordinates (မူရင်းအတိုင်း)
             mainCtx.fillText(data.unitId, centerX, 106);
             mainCtx.fillText(data.room, centerX, 166);
             mainCtx.fillText(data.brand, centerX, 223);
@@ -108,7 +104,6 @@
             mainCtx.fillText(data.cooling, centerX, 343);
             mainCtx.fillText(data.refrigerant, centerX, 401);
         } else {
-            // Indoor Fixed Coordinates (ကိုကို့ Screenshot အတိုင်း)
             mainCtx.fillText(data.unitId, centerX, 185);
             mainCtx.fillText(data.room, centerX, 290);
             mainCtx.fillText(data.brand, centerX, 410);
@@ -120,13 +115,12 @@
     }
 
     function downloadSingle() {
-        // ဘေးကအဖြူတွေ မပါအောင် 45, 95 မှ စဖြတ်ပါသည်
-        croppedCtx.drawImage(mainCanvas, 45, 95, 990, 1160, 0, 0, 990, 1160);
         const unitId = document.getElementById('unitId').value;
         const typeLabel = templateSelect.value.includes("158556") ? "Indoor" : "Outdoor";
         const link = document.createElement('a');
         link.download = `${unitId} (${typeLabel}).jpg`;
-        link.href = croppedCanvas.toDataURL('image/jpeg', 1.0);
+        // Preview အတိုင်း ပုံအပြည့် သိမ်းပါသည်
+        link.href = mainCanvas.toDataURL('image/jpeg', 1.0);
         link.click();
     }
 
@@ -171,10 +165,9 @@
                 mainCtx.fillText(data.refrigerant, centerX, 401);
             }
 
-            croppedCtx.drawImage(mainCanvas, 45, 95, 990, 1160, 0, 0, 990, 1160);
-            const b = await new Promise(r => croppedCanvas.toBlob(r, 'image/jpeg', 0.95));
+            const b = await new Promise(r => mainCanvas.toBlob(r, 'image/jpeg', 0.95));
             zip.file(`${data.unitId} (${typeLabel}).jpg`, b);
-            status.innerText = `${i} / ${lines.length - 1} ပြီးပါပြီ ကိုကို...`;
+            status.innerText = `${i} / ${lines.length - 1} ပြီးသွားပါပြီ ကိုကို...`;
         }
         
         const content = await zip.generateAsync({type:"blob"});
@@ -182,7 +175,7 @@
         link.href = URL.createObjectURL(content);
         link.download = `${typeLabel}_Unit_Stickers.zip`;
         link.click();
-        status.innerText = "အားလုံးပြီးပါပြီ ကိုကို...!";
+        status.innerText = "အားလုံးပြီးသွားပါပြီ ကိုကို...";
         document.getElementById('bulkBtn').disabled = false;
     });
 
