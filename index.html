@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AC Sticker - Ultimate Fixed Version</title>
+    <title>AC Sticker - Super Fast Master</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         body { font-family: sans-serif; padding: 10px; background: #1a1a1a; color: white; text-align: center; }
@@ -18,7 +18,7 @@
         button { color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
         .btn-zip { background: #1a73e8; margin-bottom: 10px; }
         .btn-dl { background: #28a745; }
-        #preview { width: 100%; border-radius: 8px; border: 1px solid #444; margin-top: 10px; background: white; }
+        #preview { width: 100%; border-radius: 8px; border: 2px solid #444; margin-top: 10px; background: white; }
         canvas { display: none; }
         #status { font-size: 13px; color: #ffeb3b; margin-top: 10px; }
     </style>
@@ -38,24 +38,24 @@
     <div class="section">
         <h3>၂။ တစ်ပုံချင်းစီ (Manual)</h3>
         <label>Unit Type:</label>
-        <select id="template" onchange="update()">
+        <select id="template" onchange="loadAndDraw()">
             <option value="1000158560.png">Outdoor Unit</option>
             <option value="1000158556.png" selected>Indoor Unit</option>
         </select>
         
-        <label>Unit ID:</label><input type="text" id="unitId" value="CU G-01" oninput="update()">
-        <label>Room Name:</label><input type="text" id="room" value="Reception and Waiting" oninput="update()">
+        <label>Unit ID:</label><input type="text" id="unitId" value="CU G-33" oninput="drawOnly()">
+        <label>Room Name:</label><input type="text" id="room" value="Reception and Waiting" oninput="drawOnly()">
 
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px;">
-            <select id="brand" onchange="update()">
+            <select id="brand" onchange="drawOnly()">
                 <option selected>Chigo</option><option>Hisense</option>
                 <option>Daikin</option><option>Summit</option><option>Shimazu</option>
             </select>
-            <select id="type" onchange="update()"><option selected>Wall-Mounted</option><option>Ceiling Cassette</option></select>
-            <select id="cooling" onchange="update()"><option>1.5</option><option selected>2</option><option>3</option></select>
-            <select id="refrigerant" onchange="update()"><option selected>R-32a</option><option>R-410a</option><option>R-22a</option></select>
+            <select id="type" onchange="drawOnly()"><option selected>Wall-Mounted</option><option>Ceiling Cassette</option></select>
+            <select id="cooling" onchange="drawOnly()"><option>1.5</option><option selected>2</option><option selected>3</option></select>
+            <select id="refrigerant" onchange="drawOnly()"><option selected>R-32a</option><option>R-410a</option><option selected>R-22a</option></select>
         </div>
-        <button onclick="downloadSingle()" class="btn-dl"> လက်ရှိပုံကို သိမ်းမည်</button>
+        <button onclick="downloadSingle()" class="btn-dl">လက်ရှိပုံကို သိမ်းမည် (ကိုက်တိ)</button>
     </div>
 
     <img id="preview" src="" alt="Preview">
@@ -72,41 +72,19 @@
     const previewImg = document.getElementById('preview');
     const templateSelect = document.getElementById('template');
 
-    function drawSticker(data, template) {
-        return new Promise((resolve) => {
-            const img = new Image();
-            img.src = template + "?t=" + new Date().getTime();
-            img.onload = function() {
-                mainCtx.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
-                mainCtx.drawImage(img, 0, 0, mainCanvas.width, mainCanvas.height);
-                
-                mainCtx.fillStyle = "black";
-                mainCtx.font = "bold 56px sans-serif";
-                mainCtx.textAlign = "center";
-                
-                const centerX = 680; 
+    let currentImg = new Image();
 
-                if (template.includes("158560")) {
-                    mainCtx.fillText(data.unitId, centerX, 106);
-                    mainCtx.fillText(data.room, centerX, 166);
-                    mainCtx.fillText(data.brand, centerX, 223);
-                    mainCtx.fillText(data.type, centerX, 284);
-                    mainCtx.fillText(data.cooling, centerX, 343);
-                    mainCtx.fillText(data.refrigerant, centerX, 401);
-                } else {
-                    mainCtx.fillText(data.unitId, centerX, 240);
-                    mainCtx.fillText(data.room, centerX, 344);
-                    mainCtx.fillText(data.brand, centerX, 444);
-                    mainCtx.fillText(data.type, centerX, 540);
-                    mainCtx.fillText(data.cooling, centerX, 647);
-                    mainCtx.fillText(data.refrigerant, centerX, 750);
-                }
-                resolve();
-            };
-        });
+    // ပုံကို တစ်ခါပဲ Load လုပ်ပြီး Memory ထဲ သိမ်းထားရန်
+    function loadAndDraw() {
+        currentImg = new Image();
+        currentImg.src = templateSelect.value;
+        currentImg.onload = () => {
+            drawOnly();
+        };
     }
 
-    async function update() {
+    // စာသားတွေကိုပဲ ပြန်ဆွဲတဲ့အတွက် မြန်ဆန်သွားပါပြီ
+    function drawOnly() {
         const data = {
             unitId: document.getElementById('unitId').value, 
             room: document.getElementById('room').value,
@@ -115,18 +93,38 @@
             cooling: document.getElementById('cooling').value, 
             refrigerant: document.getElementById('refrigerant').value
         };
-        await drawSticker(data, templateSelect.value);
-        previewImg.src = mainCanvas.toDataURL('image/jpeg', 0.8);
+
+        mainCtx.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
+        mainCtx.drawImage(currentImg, 0, 0, mainCanvas.width, mainCanvas.height);
+        
+        mainCtx.fillStyle = "black";
+        mainCtx.font = "bold 56px sans-serif";
+        mainCtx.textAlign = "center";
+        
+        const centerX = 680; 
+
+        if (templateSelect.value.includes("158560")) {
+            mainCtx.fillText(data.unitId, centerX, 106);
+            mainCtx.fillText(data.room, centerX, 166);
+            mainCtx.fillText(data.brand, centerX, 223);
+            mainCtx.fillText(data.type, centerX, 284);
+            mainCtx.fillText(data.cooling, centerX, 343);
+            mainCtx.fillText(data.refrigerant, centerX, 401);
+        } else {
+            mainCtx.fillText(data.unitId, centerX, 240);
+            mainCtx.fillText(data.room, centerX, 344);
+            mainCtx.fillText(data.brand, centerX, 444);
+            mainCtx.fillText(data.type, centerX, 540);
+            mainCtx.fillText(data.cooling, centerX, 647);
+            mainCtx.fillText(data.refrigerant, centerX, 750);
+        }
+        previewImg.src = mainCanvas.toDataURL('image/jpeg', 0.7);
     }
 
     function downloadSingle() {
-        // အမည်းရောင်ဘောင် အပြင်ဘက်ကနေ ကွက်တိဖြစ်အောင် 45, 95 မှ စဖြတ်ပါသည်
         croppedCtx.drawImage(mainCanvas, 45, 95, 990, 1160, 0, 0, 990, 1160);
-        
-        const unitId = document.getElementById('unitId').value;
-        const typeLabel = templateSelect.value.includes("158556") ? "Indoor" : "Outdoor";
         const link = document.createElement('a');
-        link.download = `${unitId} (${typeLabel}).jpg`;
+        link.download = `${document.getElementById('unitId').value}.jpg`;
         link.href = croppedCanvas.toDataURL('image/jpeg', 1.0);
         link.click();
     }
@@ -141,32 +139,51 @@
         const text = await file.text();
         const lines = text.split(/\r?\n/).filter(l => l.trim() !== "");
         const zip = new JSZip();
-        const template = templateSelect.value;
-        const typeLabel = template.includes("158556") ? "Indoor" : "Outdoor";
 
         for (let i = 1; i < lines.length; i++) {
             const c = lines[i].split(',');
             if (c.length < 5) continue;
             const data = { unitId: c[0], room: c[1], brand: c[2], type: c[3], cooling: c[4], refrigerant: c[5] };
-            await drawSticker(data, template);
             
-            // ဘောင်အပြင်ဘက်ကနေ ကွက်တိ ဖြတ်ပါသည်
+            mainCtx.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
+            mainCtx.drawImage(currentImg, 0, 0, mainCanvas.width, mainCanvas.height);
+            mainCtx.fillStyle = "black";
+            mainCtx.font = "bold 56px sans-serif";
+            mainCtx.textAlign = "center";
+            const centerX = 680;
+
+            if (templateSelect.value.includes("158560")) {
+                mainCtx.fillText(data.unitId, centerX, 106);
+                mainCtx.fillText(data.room, centerX, 166);
+                mainCtx.fillText(data.brand, centerX, 223);
+                mainCtx.fillText(data.type, centerX, 284);
+                mainCtx.fillText(data.cooling, centerX, 343);
+                mainCtx.fillText(data.refrigerant, centerX, 401);
+            } else {
+                mainCtx.fillText(data.unitId, centerX, 240);
+                mainCtx.fillText(data.room, centerX, 344);
+                mainCtx.fillText(data.brand, centerX, 444);
+                mainCtx.fillText(data.type, centerX, 540);
+                mainCtx.fillText(data.cooling, centerX, 647);
+                mainCtx.fillText(data.refrigerant, centerX, 750);
+            }
+
             croppedCtx.drawImage(mainCanvas, 45, 95, 990, 1160, 0, 0, 990, 1160);
             const b = await new Promise(r => croppedCanvas.toBlob(r, 'image/jpeg', 0.95));
-            zip.file(`${data.unitId} (${typeLabel}).jpg`, b);
-            status.innerText = `${i} / ${lines.length - 1} ပြီးသွားပါပြီ ကိုကို`;
+            zip.file(`${data.unitId}.jpg`, b);
+            status.innerText = `${i} / ${lines.length - 1} ပြီးပါပြီ`;
         }
         
         const content = await zip.generateAsync({type:"blob"});
         const link = document.createElement('a');
         link.href = URL.createObjectURL(content);
-        link.download = `${typeLabel}_Unit_Stickers.zip`;
+        link.download = "Bulk_Stickers.zip";
         link.click();
-        status.innerText = "အားလုံး ပြီးပါပြီ ကိုကို...";
+        status.innerText = "အောင်မြင်စွာ ပြီးဆုံးပါပြီ ကိုကို!";
         document.getElementById('bulkBtn').disabled = false;
     });
 
-    window.onload = update;
+    window.onload = loadAndDraw;
 </script>
 </body>
 </html>
